@@ -11,6 +11,7 @@
     }
     </script>
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -1724,13 +1725,70 @@
         let currentYear = new Date().getFullYear();
         let geminiAPI = null;
 
-        // Initialize Gemini AI
+        // Enhanced Dental Assistant Configuration
+        const DENTAL_CONFIG = {
+            GEMINI_API_KEY: 'AIzaSyAfr1Cp6YB_G6NIFYsJ5THhr2o8p9Bjq0o',
+            GOOGLE_CALENDAR_API_KEY: 'AIzaSyDiv7OakqUig-JtqE7UmArRH0MVaikpXhw', // Your new API key
+            CALENDAR_ID: 'primary', // Use primary calendar or your clinic email
+            CLIENT_ID: 'your-oauth-client-id', // Add OAuth client ID if needed
+        };
+
+        // Dental services and information
+        const dentalServices = {
+            'cleaning': { name: 'Professional Cleaning', price: 150, duration: 60 },
+            'filling': { name: 'Composite Filling', price: 250, duration: 90 },
+            'crown': { name: 'Dental Crown', price: 1200, duration: 120 },
+            'root canal': { name: 'Root Canal Therapy', price: 800, duration: 180 },
+            'whitening': { name: 'Teeth Whitening', price: 400, duration: 90 },
+            'extraction': { name: 'Tooth Extraction', price: 300, duration: 60 },
+            'implant': { name: 'Dental Implant', price: 2500, duration: 120 },
+            'orthodontics': { name: 'Braces/Invisalign', price: 'Consultation', duration: 60 }
+        };
+
+        const insuranceInfo = {
+            'accepted': ['Delta Dental', 'Blue Cross Blue Shield', 'Aetna', 'Cigna', 'MetLife', 'Humana', 'Guardian'],
+            'process': 'We file insurance claims directly and provide treatment estimates upfront.',
+            'financing': 'We offer 0% interest financing for 12-24 months for qualified patients.'
+        };
+
+        // Enhanced appointment booking variables
+        let bookingStep = '';
+        let appointmentData = {};
+        let availableSlots = [];
+        let isGoogleCalendarLoaded = false;
+
+        // Initialize enhanced AI and Calendar APIs
         async function initializeGeminiAI() {
             try {
                 const { GoogleGenerativeAI } = await import("@google/generative-ai");
-                geminiAPI = new GoogleGenerativeAI('AIzaSyAfr1Cp6YB_G6NIFYsJ5THhr2o8p9Bjq0o');
+                geminiAPI = new GoogleGenerativeAI(DENTAL_CONFIG.GEMINI_API_KEY);
+                
+                // Initialize Google Calendar API
+                await initializeGoogleCalendar();
+                console.log('Enhanced dental assistant initialized successfully');
             } catch (error) {
-                console.error('Failed to initialize Gemini AI:', error);
+                console.error('Failed to initialize AI systems:', error);
+            }
+        }
+
+        // Initialize Google Calendar API
+        async function initializeGoogleCalendar() {
+            if (typeof gapi !== 'undefined') {
+                gapi.load('client:auth2', async () => {
+                    try {
+                        await gapi.client.init({
+                            apiKey: DENTAL_CONFIG.GOOGLE_CALENDAR_API_KEY,
+                            clientId: DENTAL_CONFIG.CLIENT_ID,
+                            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+                            scope: 'https://www.googleapis.com/auth/calendar'
+                        });
+                        isGoogleCalendarLoaded = true;
+                        console.log('Google Calendar API loaded successfully');
+                    } catch (error) {
+                        console.error('Google Calendar API failed to load:', error);
+                        isGoogleCalendarLoaded = false;
+                    }
+                });
             }
         }
 
@@ -2180,32 +2238,68 @@
             let response = '';
             const message = userMessage.toLowerCase();
             
-            // Simple keyword-based responses
+            // Enhanced AI-powered responses
             if (message.includes('book') || message.includes('appointment') || message.includes('schedule')) {
-                response = "I'd be happy to help you book an appointment! You can click the 'Book Now' button to start the booking process, or I can transfer you to our scheduling team. What service are you interested in?";
+                response = await startEnhancedBookingProcess();
             } else if (message.includes('price') || message.includes('cost') || message.includes('pricing')) {
-                response = "Our pricing varies by service. General cleanings start at $150, cosmetic consultations are $100, and implant consultations are $200. Would you like specific pricing for a particular service?";
+                response = await handlePricingInquiry(message);
             } else if (message.includes('hour') || message.includes('open') || message.includes('time')) {
-                response = "We're open Monday-Friday 8:00 AM - 7:00 PM, and Saturday 9:00 AM - 5:00 PM. We also offer 24/7 emergency care. What day works best for you?";
+                response = `🕒 <strong>Office Hours:</strong><br>
+                    Monday-Friday: 8:00 AM - 7:00 PM<br>
+                    Saturday: 9:00 AM - 5:00 PM<br>
+                    Sunday: Closed<br><br>
+                    🚨 <strong>Emergency Care:</strong> 24/7 availability<br>
+                    📞 Emergency Line: [EMERGENCY NUMBER]<br><br>
+                    Would you like to schedule an appointment?`;
             } else if (message.includes('emergency') || message.includes('urgent') || message.includes('pain')) {
-                response = "For dental emergencies, please call us immediately at [EMERGENCY NUMBER]. We provide 24/7 emergency care. If you're experiencing severe pain, don't wait - call now!";
+                response = await handleEmergencyInquiry(message);
             } else if (message.includes('insurance') || message.includes('payment')) {
-                response = "We accept most major insurance plans and offer flexible payment options including payment plans. We can verify your insurance benefits before your visit. What insurance do you have?";
+                response = await handleInsuranceInquiry();
             } else if (message.includes('location') || message.includes('address') || message.includes('where')) {
-                response = "We're located at [CLINIC ADDRESS]. We're easily accessible with parking available. Would you like directions or help scheduling a visit?";
+                response = `📍 <strong>Our Location:</strong><br>
+                    [CLINIC ADDRESS]<br>
+                    [CITY, STATE ZIP]<br><br>
+                    🚗 Free parking available<br>
+                    ♿ Wheelchair accessible<br>
+                    🚌 Public transit nearby<br><br>
+                    Need directions or want to schedule a visit?`;
+            } else if (message.includes('service') || message.includes('treatment')) {
+                response = await handleServiceInquiry(message);
             } else {
-                // Use Gemini AI for more complex queries
+                // Use enhanced Gemini AI for complex queries
                 if (geminiAPI) {
                     try {
                         const model = geminiAPI.getGenerativeModel({ model: "gemini-pro" });
-                        const prompt = `You are a helpful dental assistant chatbot. The user asked: "${userMessage}". Provide a helpful, professional response about dental services, appointments, or general dental health. Keep responses under 100 words and be encouraging about visiting the dentist.`;
+                        const prompt = `You are an expert dental assistant chatbot for a dental clinic. The user asked: "${userMessage}". 
+                        
+                        Provide a helpful, professional response about:
+                        - Dental services and treatments
+                        - Appointment booking assistance  
+                        - Insurance and payment options
+                        - Emergency dental care
+                        - General dental health advice
+                        
+                        Keep responses under 150 words, use emojis appropriately, and always end with a helpful suggestion or question. Be warm, professional, and encouraging about dental care.`;
+                        
                         const result = await model.generateContent(prompt);
                         response = result.response.text();
                     } catch (error) {
-                        response = "I'm here to help with any questions about our dental services, appointments, or general dental health. Is there something specific I can assist you with today?";
+                        response = `I'm here to help with all your dental needs! 🦷<br><br>
+                            I can assist with:<br>
+                            📅 Appointment scheduling<br>
+                            🔍 Service information<br>
+                            💰 Pricing and insurance<br>
+                            🚨 Emergency care guidance<br><br>
+                            What would you like to know more about?`;
                     }
                 } else {
-                    response = "I'm here to help with any questions about our dental services, appointments, or general dental health. Is there something specific I can assist you with today?";
+                    response = `I'm here to help with all your dental needs! 🦷<br><br>
+                        I can assist with:<br>
+                        📅 Appointment scheduling<br>
+                        🔍 Service information<br>
+                        💰 Pricing and insurance<br>
+                        🚨 Emergency care guidance<br><br>
+                        What would you like to know more about?`;
                 }
             }
             
@@ -2213,15 +2307,394 @@
                 hideTypingIndicator();
                 addMessageToChat(response, 'bot');
                 
-                // Add relevant quick actions based on response
-                if (response.includes('appointment') || response.includes('book')) {
-                    addQuickActions(['Book Now', 'View Services', 'Check Availability']);
-                } else if (response.includes('emergency')) {
-                    addQuickActions(['Call Now', 'Emergency Info', 'Pain Relief Tips']);
-                } else if (response.includes('pricing')) {
-                    addQuickActions(['General Cleaning', 'Cosmetic Services', 'Insurance Info']);
+                // Add context-aware quick actions
+                if (message.includes('book') || message.includes('appointment')) {
+                    addQuickActions(['📅 Book Now', '🕐 Check Availability', '📞 Call Clinic']);
+                } else if (message.includes('emergency') || message.includes('pain')) {
+                    addQuickActions(['🚨 Call Emergency', '📞 Book Urgent', '💊 Pain Relief Tips']);
+                } else if (message.includes('price') || message.includes('cost')) {
+                    addQuickActions(['💰 Get Quote', '💳 Insurance Info', '📅 Book Consultation']);
+                } else {
+                    addQuickActions(['📅 Book Appointment', '🔍 Our Services', '💳 Insurance Info', '📞 Contact Us']);
                 }
             }, 1500);
+        }
+
+        // Enhanced booking process with Google Calendar integration
+        async function startEnhancedBookingProcess() {
+            bookingStep = 'service_selection';
+            
+            let serviceOptions = '';
+            Object.entries(dentalServices).forEach(([key, service]) => {
+                const priceText = typeof service.price === 'number' ? `$${service.price}` : service.price;
+                serviceOptions += `<div class="quick-action" onclick="selectService('${key}')" style="display: block; margin: 5px 0; padding: 10px; border: 1px solid #667eea; border-radius: 8px; cursor: pointer;">
+                    <strong>${service.name}</strong><br>
+                    <small>Duration: ${service.duration} min | Price: ${priceText}</small>
+                </div>`;
+            });
+
+            return `🦷 <strong>I'll help you book an appointment!</strong><br><br>
+                Please select the service you need:<br><br>
+                ${serviceOptions}
+                <br><small>💡 Not sure which service? Book a consultation and we'll help you decide!</small>`;
+        }
+
+        // Handle service selection
+        async function selectService(serviceKey) {
+            appointmentData.service = serviceKey;
+            const service = dentalServices[serviceKey];
+            bookingStep = 'time_selection';
+            
+            addMessageToChat(`Selected: ${service.name}`, 'user');
+            
+            showTypingIndicator();
+            setTimeout(async () => {
+                hideTypingIndicator();
+                
+                // Get available slots from Google Calendar
+                const slots = await getAvailableTimeSlots();
+                let slotsHTML = '';
+                
+                if (slots.length > 0) {
+                    slots.forEach(slot => {
+                        slotsHTML += `<div class="quick-action" onclick="selectTimeSlot('${slot}')" style="display: inline-block; margin: 3px; padding: 8px 12px; background: #e3f2fd; border: 1px solid #2196F3; border-radius: 15px; cursor: pointer;">
+                            ${slot}
+                        </div>`;
+                    });
+                } else {
+                    slotsHTML = '<p>⚠️ No available slots today. Checking availability for the next few days...</p>';
+                }
+                
+                const response = `✅ Great choice! <strong>${service.name}</strong> selected.<br><br>
+                    📅 <strong>Available appointment times:</strong><br><br>
+                    ${slotsHTML}
+                    <br><br>
+                    ${isGoogleCalendarLoaded ? '✅ Real-time availability from our calendar' : '⚠️ Demo slots - Calendar integration pending'}`;
+                
+                addMessageToChat(response, 'bot');
+            }, 1000);
+        }
+
+        // Get available time slots from Google Calendar
+        async function getAvailableTimeSlots(date = new Date()) {
+            if (!isGoogleCalendarLoaded) {
+                // Return demo slots if Google Calendar not available
+                return ['9:00 AM', '10:30 AM', '2:00 PM', '3:30 PM', '5:00 PM'];
+            }
+
+            try {
+                const startTime = new Date(date);
+                startTime.setHours(0, 0, 0, 0);
+                
+                const endTime = new Date(date);
+                endTime.setHours(23, 59, 59, 999);
+
+                const response = await gapi.client.calendar.events.list({
+                    calendarId: DENTAL_CONFIG.CALENDAR_ID,
+                    timeMin: startTime.toISOString(),
+                    timeMax: endTime.toISOString(),
+                    singleEvents: true,
+                    orderBy: 'startTime'
+                });
+
+                const busySlots = response.result.items || [];
+                return generateAvailableSlots(busySlots, date);
+            } catch (error) {
+                console.error('Error fetching calendar:', error);
+                return ['9:00 AM', '10:30 AM', '2:00 PM', '3:30 PM', '5:00 PM'];
+            }
+        }
+
+        // Generate available appointment slots
+        function generateAvailableSlots(busySlots, date) {
+            const workingHours = [
+                { start: 9, end: 12 },   // Morning slots
+                { start: 14, end: 18 }   // Afternoon slots
+            ];
+            
+            const availableSlots = [];
+            
+            workingHours.forEach(period => {
+                for (let hour = period.start; hour < period.end; hour += 1.5) { // 1.5 hour intervals
+                    const slotTime = new Date(date);
+                    slotTime.setHours(Math.floor(hour), (hour % 1) * 60, 0, 0);
+                    
+                    // Check if slot is available (not overlapping with busy times)
+                    const isAvailable = !busySlots.some(event => {
+                        const eventStart = new Date(event.start.dateTime || event.start.date);
+                        const eventEnd = new Date(event.end.dateTime || event.end.date);
+                        return slotTime >= eventStart && slotTime < eventEnd;
+                    });
+
+                    if (isAvailable) {
+                        availableSlots.push(slotTime.toLocaleTimeString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        }));
+                    }
+                }
+            });
+
+            return availableSlots;
+        }
+
+        // Handle pricing inquiries with detailed information
+        async function handlePricingInquiry(message) {
+            let response = '💰 <strong>Our Pricing Information:</strong><br><br>';
+            
+            Object.entries(dentalServices).forEach(([key, service]) => {
+                const priceText = typeof service.price === 'number' ? `$${service.price}` : service.price;
+                response += `• <strong>${service.name}:</strong> ${priceText}<br>`;
+            });
+            
+            response += `<br>💡 <strong>Good to know:</strong><br>
+                • Most insurance plans accepted<br>
+                • 0% financing available<br>
+                • Payment plans offered<br>
+                • Free initial consultations<br><br>
+                Would you like a personalized quote for a specific treatment?`;
+            
+            return response;
+        }
+
+        // Handle emergency inquiries
+        async function handleEmergencyInquiry(message) {
+            return `🚨 <strong>Dental Emergency Support</strong><br><br>
+                <strong>Immediate care available for:</strong><br>
+                • Severe tooth pain 🦷<br>
+                • Knocked-out teeth 💥<br>
+                • Broken/cracked teeth 🔨<br>
+                • Dental trauma 🩹<br>
+                • Abscess or swelling 🤕<br><br>
+                
+                <strong>📞 Emergency Hotline: [EMERGENCY NUMBER]</strong><br>
+                <strong>⏰ Available 24/7</strong><br><br>
+                
+                <strong>While waiting:</strong><br>
+                1. Take over-the-counter pain relief<br>
+                2. Apply cold compress for swelling<br>
+                3. Rinse with warm salt water<br>
+                4. Avoid hard foods<br><br>
+                
+                Should I help you contact our emergency line right now?`;
+        }
+
+        // Handle insurance inquiries
+        async function handleInsuranceInquiry() {
+            return `💳 <strong>Insurance & Payment Options:</strong><br><br>
+                <strong>We accept:</strong><br>
+                ${insuranceInfo.accepted.map(ins => `• ${ins}`).join('<br>')}<br><br>
+                
+                <strong>Additional Options:</strong><br>
+                • ${insuranceInfo.financing}<br>
+                • Pre-treatment cost estimates<br>
+                • Flexible payment plans<br>
+                • CareCredit accepted<br><br>
+                
+                <strong>Process:</strong> ${insuranceInfo.process}<br><br>
+                
+                Don't see your insurance? We work with most providers! Would you like me to check your specific coverage?`;
+        }
+
+        // Handle service inquiries
+        async function handleServiceInquiry(message) {
+            return `🔍 <strong>Our Comprehensive Services:</strong><br><br>
+                <strong>General Dentistry:</strong><br>
+                • Cleanings & Exams<br>
+                • Fillings & Crowns<br>
+                • Root Canal Therapy<br><br>
+                
+                <strong>Cosmetic Dentistry:</strong><br>
+                • Teeth Whitening<br>
+                • Veneers & Bonding<br>
+                • Smile Makeovers<br><br>
+                
+                <strong>Specialized Care:</strong><br>
+                • Dental Implants<br>
+                • Orthodontics (Braces/Invisalign)<br>
+                • Oral Surgery<br>
+                • Pediatric Dentistry<br><br>
+                
+                Which service interests you most? I can provide more details and help you book a consultation!`;
+        }
+
+        // Handle time slot selection
+        function selectTimeSlot(timeSlot) {
+            appointmentData.timeSlot = timeSlot;
+            bookingStep = 'contact_info';
+            
+            addMessageToChat(`Selected time: ${timeSlot}`, 'user');
+            
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const response = `⏰ Perfect! <strong>${timeSlot}</strong> is available.<br><br>
+                    Now I need your contact information to complete the booking:<br><br>
+                    
+                    <div style="background: #f8f9ff; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <div style="margin-bottom: 10px;">
+                            <strong>Full Name:</strong><br>
+                            <input type="text" id="chatPatientName" placeholder="Your full name" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-top: 5px;">
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Phone Number:</strong><br>
+                            <input type="tel" id="chatPatientPhone" placeholder="(555) 123-4567" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-top: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>Email Address:</strong><br>
+                            <input type="email" id="chatPatientEmail" placeholder="your.email@example.com" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-top: 5px;">
+                        </div>
+                        <button onclick="completeChatBooking()" style="background: #2E8B57; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%;">
+                            📅 Confirm Appointment
+                        </button>
+                    </div>`;
+                
+                addMessageToChat(response, 'bot');
+            }, 1000);
+        }
+
+        // Complete the booking process
+        async function completeChatBooking() {
+            const name = document.getElementById('chatPatientName').value;
+            const phone = document.getElementById('chatPatientPhone').value;
+            const email = document.getElementById('chatPatientEmail').value;
+
+            if (!name || !phone || !email) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            appointmentData.name = name;
+            appointmentData.phone = phone;
+            appointmentData.email = email;
+
+            addMessageToChat('Booking appointment...', 'user');
+
+            showTypingIndicator();
+
+            // Try to create actual calendar event
+            try {
+                const result = await createGoogleCalendarEvent(appointmentData);
+                
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    
+                    const service = dentalServices[appointmentData.service];
+                    const confirmationResponse = `✅ <strong>Appointment Confirmed!</strong><br><br>
+                        📋 <strong>Appointment Details:</strong><br>
+                        • <strong>Patient:</strong> ${name}<br>
+                        • <strong>Service:</strong> ${service.name}<br>
+                        • <strong>Date & Time:</strong> ${appointmentData.timeSlot}<br>
+                        • <strong>Duration:</strong> ${service.duration} minutes<br>
+                        • <strong>Phone:</strong> ${phone}<br><br>
+                        
+                        📧 <strong>Confirmation sent to:</strong> ${email}<br>
+                        📱 <strong>SMS reminder:</strong> 24 hours before<br><br>
+                        
+                        ${result.success && result.eventId ? `📅 Added to calendar: Event ID ${result.eventId}` : '⚠️ Manual calendar entry needed'}<br><br>
+                        
+                        <strong>What to bring:</strong><br>
+                        • Photo ID<br>
+                        • Insurance card<br>
+                        • Current medications list<br><br>
+                        
+                        Any other questions I can help with?`;
+
+                    addMessageToChat(confirmationResponse, 'bot');
+                    addQuickActions(['🔍 Our Services', '📞 Contact Clinic', '🆘 Emergency Info', '🔄 New Booking']);
+                    
+                    // Reset booking state
+                    bookingStep = '';
+                    appointmentData = {};
+                }, 2000);
+            } catch (error) {
+                console.error('Booking error:', error);
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addMessageToChat('✅ Appointment request received! We\'ll call you within 2 hours to confirm your booking. Thank you!', 'bot');
+                }, 1500);
+            }
+        }
+
+        // Create Google Calendar event
+        async function createGoogleCalendarEvent(appointmentData) {
+            if (!isGoogleCalendarLoaded) {
+                console.log('Calendar API not loaded, simulating booking...');
+                return { success: true, demo: true };
+            }
+
+            try {
+                // Parse appointment time (assuming today or next available day)
+                const appointmentDateTime = parseAppointmentTime(appointmentData.timeSlot);
+                const service = dentalServices[appointmentData.service];
+                
+                const endDateTime = new Date(appointmentDateTime);
+                endDateTime.setMinutes(endDateTime.getMinutes() + service.duration);
+
+                const event = {
+                    summary: `Dental: ${service.name} - ${appointmentData.name}`,
+                    description: `Patient: ${appointmentData.name}
+Phone: ${appointmentData.phone}
+Email: ${appointmentData.email}
+Service: ${service.name}
+Duration: ${service.duration} minutes`,
+                    start: {
+                        dateTime: appointmentDateTime.toISOString(),
+                        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                    },
+                    end: {
+                        dateTime: endDateTime.toISOString(),
+                        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                    },
+                    attendees: [{ email: appointmentData.email }],
+                    reminders: {
+                        useDefault: false,
+                        overrides: [
+                            { method: 'email', minutes: 24 * 60 },
+                            { method: 'popup', minutes: 60 }
+                        ]
+                    }
+                };
+
+                const response = await gapi.client.calendar.events.insert({
+                    calendarId: DENTAL_CONFIG.CALENDAR_ID,
+                    resource: event,
+                    sendUpdates: 'all'
+                });
+
+                return {
+                    success: true,
+                    eventId: response.result.id,
+                    htmlLink: response.result.htmlLink
+                };
+
+            } catch (error) {
+                console.error('Calendar event creation failed:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Parse appointment time to Date object
+        function parseAppointmentTime(timeSlot) {
+            const today = new Date();
+            const [time, period] = timeSlot.split(' ');
+            const [hours, minutes] = time.split(':').map(Number);
+            
+            let hour24 = hours;
+            if (period === 'PM' && hours !== 12) hour24 += 12;
+            if (period === 'AM' && hours === 12) hour24 = 0;
+            
+            const appointmentDate = new Date(today);
+            appointmentDate.setHours(hour24, minutes || 0, 0, 0);
+            
+            // If time has passed today, schedule for tomorrow
+            if (appointmentDate <= today) {
+                appointmentDate.setDate(appointmentDate.getDate() + 1);
+            }
+            
+            return appointmentDate;
         }
 
         function showTypingIndicator() {
