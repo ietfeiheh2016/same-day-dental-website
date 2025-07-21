@@ -95,12 +95,14 @@
 
         .page {
             min-height: 100vh;
+            display: none;
             opacity: 0;
             transform: translateY(50px);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .page.active {
+            display: block !important;
             opacity: 1;
             transform: translateY(0);
         }
@@ -1352,30 +1354,57 @@
         function showPage(pageName) {
             if (!pages.includes(pageName)) return;
             
+            console.log('Showing page:', pageName); // Debug log
+            
             // Update navigation
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            document.querySelector(`[onclick="showPage('${pageName}')"]`).classList.add('active');
             
-            // Hide all pages
+            // Find and activate the correct nav link
+            const activeLink = document.querySelector(`[onclick="showPage('${pageName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+            
+            // Hide all pages immediately
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                page.style.display = 'none';
             });
             
             // Show selected page
             const targetPage = document.getElementById(`${pageName}-page`);
             if (targetPage) {
+                console.log('Found target page:', targetPage); // Debug log
+                targetPage.style.display = 'block';
                 setTimeout(() => {
                     targetPage.classList.add('active');
-                }, 100);
+                }, 50);
+            } else {
+                console.error('Page not found:', `${pageName}-page`);
             }
             
             currentPage = pageName;
         }
 
+        // Initialize all pages on load
+        function initializePages() {
+            // Hide all pages except home initially
+            document.querySelectorAll('.page').forEach(page => {
+                if (page.id === 'home-page') {
+                    page.style.display = 'block';
+                    page.classList.add('active');
+                } else {
+                    page.style.display = 'none';
+                    page.classList.remove('active');
+                }
+            });
+        }
+
         // Loading Screen
         window.addEventListener('load', () => {
+            initializePages(); // Initialize pages immediately
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('main-content').style.opacity = '1';
