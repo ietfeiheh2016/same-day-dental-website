@@ -4,15 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0066cc" />
-    <meta name="description" content="Same Day Dental - Emergency Dental Care, General Dentistry, Cosmetic Procedures" />
-    <title>Same Day Dental - Emergency & General Dentistry</title>
+    <meta name="description" content="Same Day Dental - Revolutionary Emergency Dental Care with 3D Technology" />
+    <title>Same Day Dental - Revolutionary 3D Dental Experience</title>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-0Jyl1r9q8lzkEBVW-sR5dAD6VCDdAoY&libraries=places"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/framer-motion@10/dist/framer-motion.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -22,182 +21,255 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+        html {
             scroll-behavior: smooth;
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #0066cc, #00ccff);
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: #000;
+            color: white;
+        }
+
+        .futuristic-font {
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* 3D Transform Utilities */
+        .transform-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .rotate-3d {
+            transform: rotateX(15deg) rotateY(-15deg);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .rotate-3d:hover {
+            transform: rotateX(0deg) rotateY(0deg) scale(1.05);
+        }
+
+        /* Glassmorphism Effects */
+        .glass-ultra {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-neon {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 204, 255, 0.1));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 204, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 204, 255, 0.3);
+        }
+
+        /* Gradient Text Effects */
+        .gradient-text-3d {
+            background: linear-gradient(135deg, #00ccff, #0066cc, #ffffff, #00ccff);
+            background-size: 400% 400%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 204, 255, 0.5);
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        .glass-dark {
-            background: rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Floating Animations */
+        @keyframes float3D {
+            0%, 100% { 
+                transform: translateY(0px) rotateX(0deg) rotateY(0deg); 
+            }
+            25% { 
+                transform: translateY(-20px) rotateX(10deg) rotateY(5deg); 
+            }
+            50% { 
+                transform: translateY(-10px) rotateX(-5deg) rotateY(-10deg); 
+            }
+            75% { 
+                transform: translateY(-15px) rotateX(8deg) rotateY(8deg); 
+            }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-15px) rotate(1deg); }
-            66% { transform: translateY(-5px) rotate(-1deg); }
+        .float-3d {
+            animation: float3D 6s ease-in-out infinite;
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 30px rgba(0, 102, 204, 0.4), 0 0 60px rgba(0, 204, 255, 0.2); }
-            50% { box-shadow: 0 0 50px rgba(0, 102, 204, 0.8), 0 0 100px rgba(0, 204, 255, 0.4); }
-        }
-
-        @keyframes slideInFromLeft {
-            0% { transform: translateX(-100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideInFromRight {
-            0% { transform: translateX(100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideInFromBottom {
-            0% { transform: translateY(100%); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes morphing {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-        }
-
-        .animate-float { animation: float 4s ease-in-out infinite; }
-        .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-        .animate-slide-left { animation: slideInFromLeft 1s ease-out forwards; }
-        .animate-slide-right { animation: slideInFromRight 1s ease-out forwards; }
-        .animate-slide-bottom { animation: slideInFromBottom 1s ease-out forwards; }
-        .animate-scale { animation: scaleIn 0.8s ease-out forwards; }
-        .animate-morphing { animation: morphing 8s ease-in-out infinite; }
-
-        .page {
-            min-height: 100vh;
-            display: none;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .page.active {
-            display: block !important;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .nav-link {
+        /* Holographic Effects */
+        .holographic {
             position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            background: linear-gradient(45deg, transparent, rgba(0, 204, 255, 0.1), transparent);
+            background-size: 200% 200%;
+            animation: holographicShimmer 3s linear infinite;
         }
 
-        .nav-link:before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, #0066cc, #00ccff);
-            transition: left 0.3s ease;
+        @keyframes holographicShimmer {
+            0% { background-position: -200% -200%; }
+            100% { background-position: 200% 200%; }
         }
 
-        .nav-link:hover:before,
-        .nav-link.active:before {
-            left: 0;
+        /* Neon Glow Effects */
+        .neon-glow {
+            box-shadow: 
+                0 0 20px rgba(0, 204, 255, 0.6),
+                0 0 40px rgba(0, 204, 255, 0.4),
+                0 0 60px rgba(0, 204, 255, 0.2),
+                inset 0 0 20px rgba(0, 204, 255, 0.1);
+            animation: neonPulse 2s ease-in-out infinite alternate;
         }
 
-        .service-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
+        @keyframes neonPulse {
+            from {
+                box-shadow: 
+                    0 0 20px rgba(0, 204, 255, 0.6),
+                    0 0 40px rgba(0, 204, 255, 0.4),
+                    0 0 60px rgba(0, 204, 255, 0.2);
+            }
+            to {
+                box-shadow: 
+                    0 0 30px rgba(0, 204, 255, 0.8),
+                    0 0 60px rgba(0, 204, 255, 0.6),
+                    0 0 90px rgba(0, 204, 255, 0.4);
+            }
         }
 
-        .service-card:hover {
-            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-        }
-
-        .parallax-bg {
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
-        .typing-effect {
-            border-right: 2px solid #0066cc;
-            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #0066cc; }
-        }
-
-        .modal {
-            display: none;
+        /* Ultra-Advanced Particle Background */
+        .particle-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(0, 204, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(0, 102, 204, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 1) 100%),
+                linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(0, 20, 40, 1) 50%, rgba(0, 0, 0, 1) 100%);
+            animation: cosmicDrift 20s ease-in-out infinite;
         }
 
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        @keyframes cosmicDrift {
+            0%, 100% { 
+                background: 
+                    radial-gradient(ellipse at 20% 30%, rgba(0, 204, 255, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 70%, rgba(0, 102, 204, 0.12) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 1) 100%);
+            }
+            33% { 
+                background: 
+                    radial-gradient(ellipse at 70% 20%, rgba(0, 204, 255, 0.18) 0%, transparent 50%),
+                    radial-gradient(ellipse at 30% 80%, rgba(0, 102, 204, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.07) 0%, rgba(0, 0, 0, 1) 100%);
+            }
+            66% { 
+                background: 
+                    radial-gradient(ellipse at 80% 80%, rgba(0, 204, 255, 0.12) 0%, transparent 50%),
+                    radial-gradient(ellipse at 20% 20%, rgba(0, 102, 204, 0.18) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 1) 100%);
+            }
         }
 
-        .chatbot {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999;
+        /* Mind-Blowing Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(150px) rotateX(-45deg) scale(0.8);
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: blur(5px) brightness(0.5);
         }
 
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg) scale(1);
+            filter: blur(0px) brightness(1);
+        }
+
+        /* Ultra-Spectacular Scroll Effects */
+        .scroll-zoom {
+            opacity: 0;
+            transform: scale(0.3) rotate(-180deg);
+            transition: all 2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .scroll-zoom.revealed {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        .scroll-slide-left {
+            opacity: 0;
+            transform: translateX(-200px) rotateY(-90deg);
+            transition: all 1.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .scroll-slide-left.revealed {
+            opacity: 1;
+            transform: translateX(0) rotateY(0deg);
+        }
+
+        .scroll-slide-right {
+            opacity: 0;
+            transform: translateX(200px) rotateY(90deg);
+            transition: all 1.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .scroll-slide-right.revealed {
+            opacity: 1;
+            transform: translateX(0) rotateY(0deg);
+        }
+
+        /* Spectacular 3D Morphing Effects */
+        .morph-on-scroll {
+            transition: all 1s ease-in-out;
+        }
+
+        .morph-on-scroll:hover {
+            transform: 
+                perspective(2000px) 
+                rotateX(25deg) 
+                rotateY(-25deg) 
+                translateZ(100px) 
+                scale(1.1);
+            filter: drop-shadow(0 30px 50px rgba(0, 204, 255, 0.4));
+        }
+
+        /* 3D Card Hover Effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card-3d:hover {
+            transform: 
+                perspective(1000px) 
+                rotateX(10deg) 
+                rotateY(10deg) 
+                translateZ(50px) 
+                scale(1.05);
+        }
+
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0066cc, #00ccff);
+            background: linear-gradient(135deg, #000, #001122, #000);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            transition: opacity 1s ease, visibility 1s ease;
+            transition: opacity 2s ease, visibility 2s ease;
         }
 
         .loading-screen.hidden {
@@ -205,59 +277,484 @@
             visibility: hidden;
         }
 
-        .ripple {
+        /* Ultra-Advanced DNA Helix with 4K Effects */
+        .dna-helix {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .dna-strand {
+            position: absolute;
+            width: 6px;
+            height: 150px;
+            background: linear-gradient(0deg, 
+                #00ccff 0%, 
+                #ffffff 25%, 
+                #66ccff 50%, 
+                #ffffff 75%, 
+                #0066cc 100%);
+            border-radius: 3px;
+            animation: dnaRotateAdvanced 3s linear infinite;
+            box-shadow: 
+                0 0 10px rgba(0, 204, 255, 0.6),
+                inset 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .dna-strand:nth-child(1) { 
+            left: 20px; 
+            animation-delay: 0s;
+            filter: drop-shadow(0 0 15px rgba(0, 204, 255, 0.8));
+        }
+        
+        .dna-strand:nth-child(2) { 
+            right: 20px; 
+            animation-delay: 1s;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+        }
+
+        /* DNA connecting bridges */
+        .dna-helix::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #00ccff, #ffffff, #00ccff);
+            animation: dnaBridge 3s ease-in-out infinite;
+        }
+
+        .dna-helix::after {
+            content: '';
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #ffffff, #00ccff, #ffffff);
+            animation: dnaBridge 3s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes dnaRotateAdvanced {
+            0% { 
+                transform: rotateY(0deg) translateZ(40px) scale(1);
+                filter: brightness(1) hue-rotate(0deg);
+            }
+            25% { 
+                transform: rotateY(90deg) translateZ(40px) scale(1.1);
+                filter: brightness(1.2) hue-rotate(45deg);
+            }
+            50% { 
+                transform: rotateY(180deg) translateZ(40px) scale(1);
+                filter: brightness(1.1) hue-rotate(90deg);
+            }
+            75% { 
+                transform: rotateY(270deg) translateZ(40px) scale(1.1);
+                filter: brightness(1.3) hue-rotate(135deg);
+            }
+            100% { 
+                transform: rotateY(360deg) translateZ(40px) scale(1);
+                filter: brightness(1) hue-rotate(180deg);
+            }
+        }
+
+        @keyframes dnaBridge {
+            0%, 100% { 
+                opacity: 0.3; 
+                width: 40px; 
+            }
+            50% { 
+                opacity: 1; 
+                width: 80px; 
+            }
+        }
+
+        /* Modern Navbar */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 30px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .ripple:before {
+        .nav-item:hover {
+            color: #00ccff;
+            background: rgba(0, 204, 255, 0.1);
+            border-radius: 25px;
+        }
+
+        .nav-item::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 204, 255, 0.3), transparent);
+            transition: left 0.5s ease;
         }
 
-        .ripple:active:before {
-            width: 300px;
-            height: 300px;
+        .nav-item:hover::before {
+            left: 100%;
         }
 
-        /* Custom scrollbar */
+        /* 4K Dental Images & Backgrounds */
+        .dental-hero-bg {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)),
+                radial-gradient(circle at 30% 70%, rgba(0, 102, 204, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(0, 204, 255, 0.2) 0%, transparent 50%),
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDY2Y2MiIG9wYWNpdHk9IjAuMSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjA1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDBjY2ZmIiBvcGFjaXR5PSIwLjEiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0idG9vdGgiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgb3BhY2l0eT0iMC4xIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBvcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PGRlZnM+PGZpbHRlciBpZD0iZ2xvdyI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJjb2xvcmVkQmx1ciIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iY29sb3JlZEJsdXIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2ZlTWVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiBmaWxsPSJ1cmwoI2cpIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTUwIiByPSIzMCIgZmlsbD0idXJsKCN0b290aCkiIGZpbHRlcj0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMjUwIiByPSIyNSIgZmlsbD0idXJsKCN0b290aCkiIGZpbHRlcj0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC4yIi8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMzUwIiByPSIzNSIgZmlsbD0idXJsKCN0b290aCkiIGZpbHRlcj0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC4yNSIvPjwvc3ZnPg==');
+            background-size: 800px 800px, 100% 100%, 100% 100%, 400px 400px;
+            background-position: center, center, center, 0% 0%;
+            background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+            animation: backgroundFloat3D 30s linear infinite, backgroundPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes backgroundFloat3D {
+            0% { 
+                background-position: center, center, center, 0% 0%; 
+                transform: perspective(1000px) rotateX(0deg);
+            }
+            25% { 
+                background-position: center, center, center, 25% 25%; 
+                transform: perspective(1000px) rotateX(1deg);
+            }
+            50% { 
+                background-position: center, center, center, 50% 50%; 
+                transform: perspective(1000px) rotateX(0deg);
+            }
+            75% { 
+                background-position: center, center, center, 75% 75%; 
+                transform: perspective(1000px) rotateX(-1deg);
+            }
+            100% { 
+                background-position: center, center, center, 100% 100%; 
+                transform: perspective(1000px) rotateX(0deg);
+            }
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { filter: brightness(1) contrast(1); }
+            50% { filter: brightness(1.1) contrast(1.05); }
+        }
+
+        /* 4K Dental Equipment Images */
+        .dental-equipment-bg {
+            background: 
+                linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 102, 204, 0.1)),
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImVxdWlwIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBjY2ZmIiBvcGFjaXR5PSIwLjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDY2Y2MiIG9wYWNpdHk9IjAuMDUiLz48L2xpbmVhckdyYWRpZW50Pjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuMzVlbSI+8J+UrOKaoOKaoOKaoDwvdGV4dD48L2RlZnM+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZXF1aXApIi8+PC9zdmc+');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Photorealistic Dental Imagery */
+        .dental-procedure-bg {
+            background: 
+                linear-gradient(45deg, rgba(0, 0, 0, 0.6), rgba(0, 102, 204, 0.2)),
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9InRvb3RoSGlnaCIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjMiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMGNjZmYiIG9wYWNpdHk9IjAuMDUiLz48L3JhZGlhbEdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iZ2xvc3MiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIG9wYWNpdHk9IjAuMiIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBvcGFjaXR5PSIwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDBjY2ZmIiBvcGFjaXR5PSIwLjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0idXJsKCN0b290aEhpZ2gpIi8+PGVsbGlwc2UgY3g9IjQwMCIgY3k9IjMwMCIgcng9IjE1MCIgcnk9IjIwMCIgZmlsbD0idXJsKCNnbG9zcykiLz48L3N2Zz4=');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: rgba(0, 0, 0, 0.5);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #0066cc, #00ccff);
+            background: linear-gradient(180deg, #00ccff, #0066cc);
             border-radius: 10px;
         }
 
-        .bg-pattern {
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(0, 102, 204, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0, 204, 255, 0.1) 0%, transparent 50%);
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #0066cc, #00ccff);
         }
 
-        .text-shadow {
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        /* Section Dividers */
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ccff, transparent);
+            margin: 100px 0;
+            position: relative;
         }
 
-        .hover-scale {
-            transition: transform 0.3s ease;
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -10px;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #00ccff, transparent);
+            border-radius: 50%;
         }
 
-        .hover-scale:hover {
-            transform: scale(1.05);
+        /* Ultra-Spectacular Floating Elements */
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+            transform-style: preserve-3d;
+            filter: drop-shadow(0 0 10px rgba(0, 204, 255, 0.3));
+        }
+
+        .floating-tooth {
+            font-size: 3rem;
+            animation: float3DSpectacular 12s ease-in-out infinite;
+            background: linear-gradient(45deg, #ffffff, #00ccff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes float3DSpectacular {
+            0%, 100% { 
+                transform: 
+                    translateY(0px) 
+                    rotateX(0deg) 
+                    rotateY(0deg) 
+                    rotateZ(0deg) 
+                    scale(1);
+                filter: 
+                    drop-shadow(0 0 10px rgba(0, 204, 255, 0.3)) 
+                    hue-rotate(0deg);
+            }
+            16% { 
+                transform: 
+                    translateY(-30px) 
+                    rotateX(15deg) 
+                    rotateY(30deg) 
+                    rotateZ(5deg) 
+                    scale(1.1);
+                filter: 
+                    drop-shadow(0 0 15px rgba(0, 204, 255, 0.5)) 
+                    hue-rotate(60deg);
+            }
+            33% { 
+                transform: 
+                    translateY(-15px) 
+                    rotateX(-10deg) 
+                    rotateY(-15deg) 
+                    rotateZ(-10deg) 
+                    scale(0.9);
+                filter: 
+                    drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)) 
+                    hue-rotate(120deg);
+            }
+            50% { 
+                transform: 
+                    translateY(-40px) 
+                    rotateX(20deg) 
+                    rotateY(45deg) 
+                    rotateZ(15deg) 
+                    scale(1.2);
+                filter: 
+                    drop-shadow(0 0 25px rgba(0, 204, 255, 0.7)) 
+                    hue-rotate(180deg);
+            }
+            66% { 
+                transform: 
+                    translateY(-25px) 
+                    rotateX(-15deg) 
+                    rotateY(-30deg) 
+                    rotateZ(-5deg) 
+                    scale(1.05);
+                filter: 
+                    drop-shadow(0 0 18px rgba(255, 255, 255, 0.6)) 
+                    hue-rotate(240deg);
+            }
+            83% { 
+                transform: 
+                    translateY(-35px) 
+                    rotateX(12deg) 
+                    rotateY(25deg) 
+                    rotateZ(8deg) 
+                    scale(0.95);
+                filter: 
+                    drop-shadow(0 0 22px rgba(0, 204, 255, 0.5)) 
+                    hue-rotate(300deg);
+            }
+        }
+
+        /* Services Grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            perspective: 1000px;
+        }
+
+        /* Ultra-Dramatic Emergency Pulse */
+        .emergency-pulse {
+            animation: emergencyPulseSpectacular 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes emergencyPulseSpectacular {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(255, 0, 0, 0.5),
+                    0 0 40px rgba(255, 100, 100, 0.3),
+                    inset 0 0 20px rgba(255, 0, 0, 0.1);
+                transform: scale(1) rotateX(0deg);
+                filter: brightness(1) contrast(1);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 40px rgba(255, 0, 0, 0.8),
+                    0 0 80px rgba(255, 100, 100, 0.5),
+                    inset 0 0 30px rgba(255, 0, 0, 0.2),
+                    0 0 120px rgba(255, 0, 0, 0.2);
+                transform: scale(1.05) rotateX(2deg);
+                filter: brightness(1.2) contrast(1.1);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 60px rgba(255, 0, 0, 1),
+                    0 0 100px rgba(255, 50, 50, 0.7),
+                    inset 0 0 40px rgba(255, 0, 0, 0.3),
+                    0 0 160px rgba(255, 0, 0, 0.3);
+                transform: scale(1.08) rotateX(-2deg);
+                filter: brightness(1.3) contrast(1.2) saturate(1.3);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gradient-text-3d {
+                font-size: 2rem;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                position: fixed;
+                bottom: 20px;
+                top: auto;
+                border-radius: 30px;
+                padding: 5px 20px;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #00ccff, #0066cc, #00ccff);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        /* Ultra-Realistic 3D Tooth Model */
+        .tooth-3d-container {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 2000px;
+        }
+
+        .tooth-3d {
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 255, 0.95) 30%, rgba(240, 248, 255, 0.9) 100%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 204, 255, 0.05) 100%);
+            border-radius: 45% 45% 55% 55% / 70% 70% 30% 30%;
+            position: relative;
+            transform: rotateX(15deg) rotateY(-15deg);
+            animation: rotate3DRealistic 15s ease-in-out infinite;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                0 5px 20px rgba(0, 204, 255, 0.3),
+                inset 0 15px 30px rgba(255, 255, 255, 0.9),
+                inset 0 -5px 15px rgba(0, 102, 204, 0.1),
+                inset -5px 0 15px rgba(0, 204, 255, 0.05);
+            filter: drop-shadow(0 0 20px rgba(0, 204, 255, 0.4));
+        }
+
+        .tooth-3d::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            width: 40%;
+            height: 60%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+            border-radius: 50% 30% 60% 40%;
+            filter: blur(2px);
+        }
+
+        .tooth-3d::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30%;
+            height: 20%;
+            background: radial-gradient(ellipse, rgba(0, 204, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes rotate3DRealistic {
+            0% { 
+                transform: rotateX(15deg) rotateY(-15deg) rotateZ(0deg) scale(1);
+                filter: drop-shadow(0 0 20px rgba(0, 204, 255, 0.4)) brightness(1);
+            }
+            25% { 
+                transform: rotateX(10deg) rotateY(-10deg) rotateZ(90deg) scale(1.05);
+                filter: drop-shadow(0 0 30px rgba(0, 204, 255, 0.6)) brightness(1.1);
+            }
+            50% { 
+                transform: rotateX(5deg) rotateY(-5deg) rotateZ(180deg) scale(1);
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.5)) brightness(1.05);
+            }
+            75% { 
+                transform: rotateX(10deg) rotateY(-10deg) rotateZ(270deg) scale(1.05);
+                filter: drop-shadow(0 0 35px rgba(0, 204, 255, 0.7)) brightness(1.15);
+            }
+            100% { 
+                transform: rotateX(15deg) rotateY(-15deg) rotateZ(360deg) scale(1);
+                filter: drop-shadow(0 0 20px rgba(0, 204, 255, 0.4)) brightness(1);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.7; transform: translateX(-50%) scale(1.2); }
         }
     </style>
 
@@ -267,22 +764,29 @@
                 extend: {
                     colors: {
                         primary: {
-                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
-                            400: '#60a5fa', 500: '#0066cc', 600: '#004499', 700: '#003366',
-                            800: '#1e40af', 900: '#1e3a8a'
+                            50: '#e6f3ff', 100: '#b3d9ff', 200: '#80bfff', 
+                            300: '#4da6ff', 400: '#1a8cff', 500: '#0066cc', 
+                            600: '#0052a3', 700: '#003d7a', 800: '#002952', 
+                            900: '#001429'
                         },
                         secondary: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
-                            300: '#7dd3fc', 400: '#38bdf8', 500: '#00ccff',
-                            600: '#0099cc', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e'
+                            50: '#e6fcff', 100: '#b3f6ff', 200: '#80f0ff',
+                            300: '#4deaff', 400: '#1ae4ff', 500: '#00ccff',
+                            600: '#00a3cc', 700: '#007a99', 800: '#005266',
+                            900: '#002933'
+                        },
+                        accent: {
+                            500: '#ff6b35',
+                            600: '#e55a2b'
                         }
                     },
                     fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
+                        'futuristic': ['Orbitron', 'monospace'],
                     },
                     animation: {
-                        'spin-slow': 'spin 3s linear infinite',
-                        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'float-3d': 'float3D 6s ease-in-out infinite',
+                        'gradient-shift': 'gradientShift 4s ease-in-out infinite',
                     }
                 }
             }
@@ -290,1054 +794,885 @@
     </script>
 </head>
 
-<body class="bg-white">
+<body class="bg-black text-white">
+    <!-- Particle Background -->
+    <div class="particle-bg"></div>
+    
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress" class="scroll-progress"></div>
+
     <!-- Loading Screen -->
     <div id="loading" class="loading-screen">
-        <div class="text-center text-white">
-            <div class="relative mb-8">
-                <div class="w-24 h-24 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                <div class="absolute inset-0 w-24 h-24 border-4 border-cyan-300 border-b-transparent rounded-full animate-spin mx-auto" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+        <div class="text-center">
+            <div class="dna-helix mb-8 mx-auto transform-3d">
+                <div class="dna-strand"></div>
+                <div class="dna-strand"></div>
             </div>
-            <h2 class="text-4xl font-bold mb-4 text-shadow">Same Day Dental</h2>
-            <p class="text-xl opacity-90 mb-4">Loading Your Perfect Smile Experience...</p>
-            <div class="w-64 h-2 bg-white bg-opacity-20 rounded-full mx-auto overflow-hidden">
-                <div class="h-full bg-white rounded-full animate-pulse" style="width: 0%; animation: loadProgress 3s ease-out forwards;"></div>
+            <h2 class="text-4xl font-bold futuristic-font gradient-text-3d mb-4">Same Day Dental</h2>
+            <p class="text-xl text-blue-300 mb-6">Loading Revolutionary 3D Experience...</p>
+            <div class="w-80 h-2 bg-gray-800 rounded-full mx-auto overflow-hidden">
+                <div id="loading-bar" class="h-full bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full transition-all duration-1000 ease-out" style="width: 0%;"></div>
             </div>
+            <p class="text-sm text-gray-400 mt-4">Initializing 3D Dental Technology...</p>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white bg-opacity-90 backdrop-blur-lg border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
-                    <div class="relative">
-                        <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center animate-pulse-glow">
-                            <i class="fas fa-tooth text-white text-xl"></i>
-                        </div>
-                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold gradient-text">Same Day Dental</h1>
-                        <p class="text-sm text-gray-600">Emergency & General Care</p>
-                    </div>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="#" class="nav-link active text-gray-700 hover:text-primary-500 font-medium transition-colors" onclick="showPage('home')">Home</a>
-                    <a href="#" class="nav-link text-gray-700 hover:text-primary-500 font-medium transition-colors" onclick="showPage('about')">About</a>
-                    <a href="#" class="nav-link text-gray-700 hover:text-primary-500 font-medium transition-colors" onclick="showPage('services')">Services</a>
-                    <a href="#" class="nav-link text-gray-700 hover:text-primary-500 font-medium transition-colors" onclick="showPage('emergency')">Emergency</a>
-                    <a href="#" class="nav-link text-gray-700 hover:text-primary-500 font-medium transition-colors" onclick="showPage('contact')">Contact</a>
-                </div>
-
-                <!-- Emergency Call Button -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <div class="text-right">
-                        <p class="text-sm text-gray-600">Emergency Line</p>
-                        <a href="tel:+13178545309" class="text-primary-600 font-bold hover:text-primary-700 transition-colors">
-                            (317) 854-5309
-                        </a>
-                    </div>
-                    <button onclick="openBookingModal()" class="ripple bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-xl transition-all duration-300 animate-pulse-glow">
-                        Book Now
-                    </button>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2">
-                    <div class="w-6 h-6 flex flex-col justify-center space-y-1">
-                        <span class="block w-full h-0.5 bg-gray-600 transition-all"></span>
-                        <span class="block w-full h-0.5 bg-gray-600 transition-all"></span>
-                        <span class="block w-full h-0.5 bg-gray-600 transition-all"></span>
-                    </div>
-                </button>
-            </div>
+    <!-- Modern Navbar -->
+    <nav class="navbar glass-ultra">
+        <div class="flex items-center space-x-2">
+            <div class="nav-item font-semibold" onclick="scrollToSection('hero')">Home</div>
+            <div class="nav-item" onclick="scrollToSection('about')">About</div>
+            <div class="nav-item" onclick="scrollToSection('services')">Services</div>
+            <div class="nav-item" onclick="scrollToSection('emergency')">Emergency</div>
+            <div class="nav-item" onclick="scrollToSection('contact')">Contact</div>
+            <button onclick="openBookingModal()" class="ml-4 bg-gradient-to-r from-primary-500 to-secondary-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all duration-300 neon-glow">
+                Book Now
+            </button>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
-    <div id="main-content" class="pt-20">
+    <!-- Floating Elements -->
+    <div class="floating-element floating-tooth" style="top: 10%; left: 5%; animation-delay: 0s;">🦷</div>
+    <div class="floating-element floating-tooth" style="top: 20%; right: 10%; animation-delay: 2s;">🦷</div>
+    <div class="floating-element floating-tooth" style="bottom: 30%; left: 8%; animation-delay: 4s;">🦷</div>
+    <div class="floating-element floating-tooth" style="top: 60%; right: 5%; animation-delay: 6s;">🦷</div>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="min-h-screen flex items-center justify-center relative dental-hero-bg">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80"></div>
         
-        <!-- HOME PAGE -->
-        <div id="home-page" class="page active">
-            <!-- Hero Section -->
-            <section class="min-h-screen bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white relative overflow-hidden bg-pattern">
-                <!-- Animated Background Elements -->
-                <div class="absolute inset-0 overflow-hidden">
-                    <div class="absolute top-20 left-10 w-32 h-32 bg-white bg-opacity-10 rounded-full animate-float" style="animation-delay: 0s;"></div>
-                    <div class="absolute top-40 right-20 w-24 h-24 bg-secondary-400 bg-opacity-20 rounded-full animate-float" style="animation-delay: 1s;"></div>
-                    <div class="absolute bottom-40 left-20 w-40 h-40 bg-primary-300 bg-opacity-15 animate-morphing"></div>
-                    <div class="absolute bottom-20 right-10 w-20 h-20 bg-white bg-opacity-10 rounded-full animate-float" style="animation-delay: 2s;"></div>
-                </div>
-
-                <div class="relative z-10 min-h-screen flex items-center">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                            
-                            <!-- Left Column -->
-                            <div class="text-white animate-slide-left">
-                                <!-- Rating Badge -->
-                                <div class="inline-flex items-center glass rounded-full px-6 py-3 mb-8 hover-scale">
-                                    <div class="flex items-center space-x-2">
-                                        <div class="flex">
-                                            <i class="fas fa-star text-yellow-400"></i>
-                                            <i class="fas fa-star text-yellow-400"></i>
-                                            <i class="fas fa-star text-yellow-400"></i>
-                                            <i class="fas fa-star text-yellow-400"></i>
-                                            <i class="far fa-star text-yellow-400"></i>
-                                        </div>
-                                        <span class="text-white font-semibold">4.1</span>
-                                        <span class="text-white opacity-90">• 2,742 Reviews</span>
-                                    </div>
-                                </div>
-
-                                <!-- Main Headlines -->
-                                <h1 class="text-6xl lg:text-8xl font-black mb-6 leading-tight text-shadow">
-                                    <span class="block">Same Day</span>
-                                    <span class="block gradient-text">Emergency Care</span>
-                                </h1>
-
-                                <h2 class="text-2xl lg:text-3xl mb-8 text-white opacity-90 font-medium">
-                                    <i class="fas fa-bolt text-yellow-400 mr-3"></i>
-                                    No Appointment Needed - Walk-ins Welcome
-                                </h2>
-
-                                <p class="text-xl mb-10 text-white opacity-80 max-w-lg leading-relaxed">
-                                    Get immediate relief from dental pain with our emergency services. 
-                                    Open 7 days a week with the most advanced dental technology in Indianapolis.
-                                </p>
-
-                                <!-- CTA Buttons -->
-                                <div class="flex flex-col sm:flex-row gap-6 mb-12">
-                                    <button onclick="openBookingModal()" class="ripple bg-white text-primary-600 px-10 py-5 rounded-full font-bold text-xl hover:shadow-2xl transition-all duration-300 hover-scale flex items-center justify-center space-x-3">
-                                        <i class="fas fa-calendar-check"></i>
-                                        <span>Book Emergency Visit</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                    </button>
-
-                                    <a href="tel:+13178545309" class="ripple border-2 border-white text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-white hover:text-primary-600 transition-all duration-300 hover-scale flex items-center justify-center space-x-3">
-                                        <i class="fas fa-phone-alt animate-pulse"></i>
-                                        <span>Call (317) 854-5309</span>
-                                    </a>
-                                </div>
-
-                                <!-- Features Grid -->
-                                <div class="grid grid-cols-2 gap-6">
-                                    <div class="glass rounded-2xl p-4 hover-scale">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-ambulance text-red-400 text-2xl"></i>
-                                            <div>
-                                                <h3 class="font-bold">24/7 Emergency</h3>
-                                                <p class="text-sm opacity-80">Always available</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="glass rounded-2xl p-4 hover-scale">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-clock text-green-400 text-2xl"></i>
-                                            <div>
-                                                <h3 class="font-bold">Same Day Service</h3>
-                                                <p class="text-sm opacity-80">No waiting</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="glass rounded-2xl p-4 hover-scale">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-award text-yellow-400 text-2xl"></i>
-                                            <div>
-                                                <h3 class="font-bold">Modern Equipment</h3>
-                                                <p class="text-sm opacity-80">Latest technology</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="glass rounded-2xl p-4 hover-scale">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-heart text-pink-400 text-2xl"></i>
-                                            <div>
-                                                <h3 class="font-bold">Gentle Care</h3>
-                                                <p class="text-sm opacity-80">Pain-free treatment</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Right Column - 3D Visual -->
-                            <div class="relative animate-slide-right">
-                                <div class="relative">
-                                    <!-- Main Card -->
-                                    <div class="glass rounded-3xl p-8 shadow-2xl hover-scale">
-                                        <div class="aspect-square bg-gradient-to-br from-white to-gray-100 rounded-2xl flex items-center justify-center relative overflow-hidden">
-                                            <div class="text-8xl animate-float">🦷</div>
-                                            
-                                            <!-- Floating Stats -->
-                                            <div class="absolute top-4 right-4 glass-dark rounded-xl p-3 animate-pulse">
-                                                <div class="text-center">
-                                                    <div class="text-lg font-bold text-white">15+</div>
-                                                    <div class="text-xs text-gray-300">Years</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="absolute bottom-4 left-4 glass-dark rounded-xl p-3 animate-pulse" style="animation-delay: 0.5s;">
-                                                <div class="text-center">
-                                                    <div class="text-lg font-bold text-white">2.7K+</div>
-                                                    <div class="text-xs text-gray-300">Patients</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Floating Elements -->
-                                    <div class="absolute -top-6 -left-6 glass rounded-2xl p-4 animate-float">
-                                        <i class="fas fa-user-md text-primary-600 text-2xl"></i>
-                                    </div>
-
-                                    <div class="absolute -bottom-6 -right-6 glass rounded-2xl p-4 animate-float" style="animation-delay: 1s;">
-                                        <i class="fas fa-shield-alt text-green-500 text-2xl"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scroll Indicator -->
-                <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-                    <div class="flex flex-col items-center text-white cursor-pointer" onclick="showPage('services')">
-                        <span class="text-sm mb-2 opacity-80">Explore Services</span>
-                        <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-                            <div class="w-1 h-3 bg-white rounded-full mt-2 animate-ping"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- ABOUT PAGE -->
-        <div id="about-page" class="page">
-            <section class="min-h-screen py-20 bg-gradient-to-br from-gray-50 to-white relative">
-                <!-- Background Pattern -->
-                <div class="absolute inset-0 bg-pattern opacity-30"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 text-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <!-- Header -->
-                    <div class="text-center mb-20">
-                        <h2 class="text-6xl font-bold gradient-text mb-6 animate-slide-bottom">About Same Day Dental</h2>
-                        <p class="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                            Where cutting-edge dental technology meets compassionate care. 
-                            We're revolutionizing emergency dental services in Indianapolis.
-                        </p>
-                    </div>
-
-                    <!-- Story Section -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
-                        <div class="animate-slide-left">
-                            <div class="glass-dark rounded-3xl p-8 shadow-2xl">
-                                <h3 class="text-4xl font-bold text-white mb-6">Our Story</h3>
-                                <p class="text-gray-300 text-lg leading-relaxed mb-6">
-                                    Located at <strong>7225 US-31</strong>, we've been Indianapolis' premier emergency dental destination 
-                                    since 2008. Our state-of-the-art facility combines the latest dental technology with a warm, 
-                                    welcoming environment that puts patients at ease.
-                                </p>
-                                <p class="text-gray-300 text-lg leading-relaxed mb-8">
-                                    With over <strong>15 years of experience</strong> and <strong>2,742 satisfied patients</strong>, 
-                                    we've built our reputation on providing immediate, compassionate care when you need it most.
-                                </p>
-                                
-                                <!-- Stats -->
-                                <div class="grid grid-cols-2 gap-6">
-                                    <div class="text-center">
-                                        <div class="text-4xl font-bold text-primary-400 mb-2">15+</div>
-                                        <div class="text-gray-400">Years Experience</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="text-4xl font-bold text-secondary-400 mb-2">2.7K+</div>
-                                        <div class="text-gray-400">Happy Patients</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="text-4xl font-bold text-green-400 mb-2">24/7</div>
-                                        <div class="text-gray-400">Emergency Care</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="text-4xl font-bold text-yellow-400 mb-2">4.1⭐</div>
-                                        <div class="text-gray-400">Google Rating</div>
-                                    </div>
-                                </div>
+                <!-- Left: Text Content -->
+                <div class="scroll-reveal">
+                    <!-- Rating Badge -->
+                    <div class="inline-flex items-center glass-neon rounded-full px-8 py-4 mb-8 holographic">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex text-yellow-400 text-lg">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
                             </div>
-                        </div>
-
-                        <div class="animate-slide-right">
-                            <!-- Team Photo Placeholder -->
-                            <div class="relative">
-                                <div class="bg-gradient-to-br from-primary-100 to-secondary-100 rounded-3xl p-8 shadow-2xl">
-                                    <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-6">
-                                        <div class="text-8xl">👨‍⚕️</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <h4 class="text-2xl font-bold text-gray-800 mb-2">Dr. Smith & Team</h4>
-                                        <p class="text-gray-600">Dedicated to Your Oral Health</p>
-                                    </div>
-                                </div>
-                                
-                                <!-- Floating Badges -->
-                                <div class="absolute -top-4 -right-4 glass rounded-full p-4 animate-float">
-                                    <i class="fas fa-certificate text-primary-600 text-2xl"></i>
-                                </div>
-                                <div class="absolute -bottom-4 -left-4 glass rounded-full p-4 animate-float" style="animation-delay: 1s;">
-                                    <i class="fas fa-graduation-cap text-secondary-600 text-2xl"></i>
-                                </div>
-                            </div>
+                            <span class="text-white font-bold text-lg">4.1 Rating</span>
+                            <span class="text-blue-300">• 2,742 Reviews</span>
                         </div>
                     </div>
 
-                    <!-- Features Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <div class="service-card glass rounded-2xl p-6 text-center hover-scale">
-                            <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-hospital text-white text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Modern Facility</h3>
-                            <p class="text-gray-600">State-of-the-art equipment and sterilization procedures</p>
-                        </div>
+                    <!-- Main Headline -->
+                    <h1 class="text-5xl lg:text-8xl font-black mb-8 leading-tight">
+                        <span class="block futuristic-font gradient-text-3d">SAME DAY</span>
+                        <span class="block futuristic-font text-white">DENTAL</span>
+                        <span class="block text-4xl lg:text-5xl text-blue-400 font-normal">Revolution</span>
+                    </h1>
 
-                        <div class="service-card glass rounded-2xl p-6 text-center hover-scale">
-                            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-users text-white text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Expert Team</h3>
-                            <p class="text-gray-600">Experienced professionals committed to excellence</p>
-                        </div>
+                    <h2 class="text-2xl lg:text-3xl mb-8 text-blue-200 font-light">
+                        <i class="fas fa-bolt text-yellow-400 mr-3"></i>
+                        3D Emergency Care • No Appointment Needed
+                    </h2>
 
-                        <div class="service-card glass rounded-2xl p-6 text-center hover-scale">
-                            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-clock text-white text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Flexible Hours</h3>
-                            <p class="text-gray-600">Evening, weekend, and emergency appointments</p>
-                        </div>
+                    <p class="text-xl mb-12 text-gray-300 max-w-2xl leading-relaxed">
+                        Experience the future of dentistry with our revolutionary 3D technology, 
+                        AI-powered diagnostics, and same-day emergency care available 24/7.
+                    </p>
 
-                        <div class="service-card glass rounded-2xl p-6 text-center hover-scale">
-                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-credit-card text-white text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Insurance</h3>
-                            <p class="text-gray-600">Most major insurance plans accepted</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+                        <button onclick="openBookingModal()" class="group relative px-12 py-6 bg-gradient-to-r from-primary-500 via-blue-500 to-secondary-500 rounded-full font-bold text-xl hover:shadow-2xl transition-all duration-500 neon-glow transform hover:scale-105">
+                            <span class="flex items-center justify-center space-x-3">
+                                <i class="fas fa-calendar-check group-hover:animate-pulse"></i>
+                                <span>Book 3D Emergency Visit</span>
+                                <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </span>
+                        </button>
 
-        <!-- SERVICES PAGE -->
-        <div id="services-page" class="page">
-            <section class="min-h-screen py-20 bg-gradient-to-br from-primary-50 to-secondary-50">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <!-- Header -->
-                    <div class="text-center mb-20">
-                        <h2 class="text-6xl font-bold gradient-text mb-6">Our Services</h2>
-                        <p class="text-2xl text-gray-600 max-w-4xl mx-auto">
-                            Comprehensive dental care with same-day appointments and emergency services available 24/7
-                        </p>
-                    </div>
-
-                    <!-- Services Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        
-                        <!-- Emergency Care -->
-                        <div class="service-card bg-white rounded-3xl shadow-xl overflow-hidden relative group">
-                            <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
-                                🚨 URGENT
-                            </div>
-                            <div class="bg-gradient-to-r from-red-500 to-red-600 p-8 text-white relative">
-                                <i class="fas fa-ambulance text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold mb-2">Emergency Dental Care</h3>
-                                <div class="text-3xl font-bold">From $89</div>
-                            </div>
-                            <div class="p-8">
-                                <p class="text-gray-600 mb-6 leading-relaxed">
-                                    Immediate relief for severe pain, broken teeth, or dental trauma. No appointment needed - walk-ins welcome 24/7.
-                                </p>
-                                <ul class="space-y-3 mb-8">
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Severe toothache relief</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Broken tooth repair</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Lost filling replacement</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Abscess treatment</span>
-                                    </li>
-                                </ul>
-                                <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 ripple">
-                                    Book Emergency Visit
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- General Dentistry -->
-                        <div class="service-card bg-white rounded-3xl shadow-xl overflow-hidden">
-                            <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-white">
-                                <i class="fas fa-tooth text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold mb-2">General Dentistry</h3>
-                                <div class="text-3xl font-bold">From $149</div>
-                            </div>
-                            <div class="p-8">
-                                <p class="text-gray-600 mb-6 leading-relaxed">
-                                    Complete oral health care including cleanings, fillings, and preventive treatments.
-                                </p>
-                                <ul class="space-y-3 mb-8">
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Professional cleaning</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Cavity fillings</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Comprehensive exams</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Digital X-rays</span>
-                                    </li>
-                                </ul>
-                                <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 ripple">
-                                    Schedule Cleaning
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Cosmetic Dentistry -->
-                        <div class="service-card bg-white rounded-3xl shadow-xl overflow-hidden">
-                            <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-8 text-white">
-                                <i class="fas fa-magic text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold mb-2">Cosmetic Dentistry</h3>
-                                <div class="text-3xl font-bold">From $299</div>
-                            </div>
-                            <div class="p-8">
-                                <p class="text-gray-600 mb-6 leading-relaxed">
-                                    Transform your smile with professional whitening and cosmetic procedures.
-                                </p>
-                                <ul class="space-y-3 mb-8">
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Professional whitening</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Porcelain veneers</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Dental bonding</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Smile makeover</span>
-                                    </li>
-                                </ul>
-                                <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 ripple">
-                                    Transform Smile
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Restorative Care -->
-                        <div class="service-card bg-white rounded-3xl shadow-xl overflow-hidden">
-                            <div class="bg-gradient-to-r from-green-500 to-green-600 p-8 text-white">
-                                <i class="fas fa-tools text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold mb-2">Restorative Care</h3>
-                                <div class="text-3xl font-bold">From $599</div>
-                            </div>
-                            <div class="p-8">
-                                <p class="text-gray-600 mb-6 leading-relaxed">
-                                    Repair and restore damaged teeth with crowns, bridges, and implants.
-                                </p>
-                                <ul class="space-y-3 mb-8">
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Dental crowns</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Bridges</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Dental implants</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Dentures</span>
-                                    </li>
-                                </ul>
-                                <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 ripple">
-                                    Restore Teeth
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Family Dentistry -->
-                        <div class="service-card bg-white rounded-3xl shadow-xl overflow-hidden">
-                            <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-8 text-white">
-                                <i class="fas fa-users text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold mb-2">Family Dentistry</h3>
-                                <div class="text-3xl font-bold">From $99</div>
-                            </div>
-                            <div class="p-8">
-                                <p class="text-gray-600 mb-6 leading-relaxed">
-                                    Gentle dental care for patients of all ages in a family-friendly environment.
-                                </p>
-                                <ul class="space-y-3 mb-8">
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Pediatric care</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Adult treatments</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Senior services</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Preventive care</span>
-                                    </li>
-                                </ul>
-                                <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 ripple">
-                                    Family Appointment
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Oral Surgery -->
-                        <div class="service-card bg-white rounded-3xl shadow-xl overflow-hidden">
-                            <div class="bg-gradient-to-r from-gray-500 to-gray-600 p-8 text-white">
-                                <i class="fas fa-cut text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold mb-2">Oral Surgery</h3>
-                                <div class="text-3xl font-bold">From $199</div>
-                            </div>
-                            <div class="p-8">
-                                <p class="text-gray-600 mb-6 leading-relaxed">
-                                    Advanced surgical procedures including extractions and wisdom tooth removal.
-                                </p>
-                                <ul class="space-y-3 mb-8">
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Tooth extraction</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Wisdom teeth removal</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Oral surgery</span>
-                                    </li>
-                                    <li class="flex items-center space-x-3">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span>Sedation options</span>
-                                    </li>
-                                </ul>
-                                <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 ripple">
-                                    Consultation
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- EMERGENCY PAGE -->
-        <div id="emergency-page" class="page">
-            <section class="min-h-screen py-20 bg-gradient-to-br from-red-500 to-red-700 text-white relative overflow-hidden">
-                <!-- Emergency Background Animation -->
-                <div class="absolute inset-0">
-                    <div class="absolute top-20 left-10 w-4 h-4 bg-white rounded-full animate-ping" style="animation-delay: 0s;"></div>
-                    <div class="absolute top-40 right-20 w-6 h-6 bg-yellow-400 rounded-full animate-ping" style="animation-delay: 1s;"></div>
-                    <div class="absolute bottom-40 left-20 w-5 h-5 bg-white rounded-full animate-ping" style="animation-delay: 2s;"></div>
-                    <div class="absolute bottom-20 right-10 w-3 h-3 bg-yellow-400 rounded-full animate-ping" style="animation-delay: 0.5s;"></div>
-                </div>
-
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <!-- Emergency Header -->
-                    <div class="text-center mb-20">
-                        <div class="mb-8">
-                            <i class="fas fa-ambulance text-8xl animate-pulse"></i>
-                        </div>
-                        <h2 class="text-6xl lg:text-8xl font-black mb-6 text-shadow">
-                            DENTAL EMERGENCY?
-                        </h2>
-                        <p class="text-3xl mb-8 opacity-90">
-                            We're Here to Help - 24/7/365
-                        </p>
-                        
-                        <!-- Emergency Call Button -->
-                        <a href="tel:+13178545309" class="inline-flex items-center bg-white text-red-600 px-12 py-6 rounded-full text-2xl font-black hover:shadow-2xl transition-all duration-300 animate-pulse-glow hover-scale space-x-4">
-                            <i class="fas fa-phone-alt animate-pulse"></i>
-                            <span>CALL NOW: (317) 854-5309</span>
-                            <i class="fas fa-arrow-right"></i>
+                        <a href="tel:+13178545309" class="group px-12 py-6 border-2 border-blue-400 text-blue-400 rounded-full font-bold text-xl hover:bg-blue-400 hover:text-black transition-all duration-500 hover:shadow-xl">
+                            <span class="flex items-center justify-center space-x-3">
+                                <i class="fas fa-phone-alt group-hover:animate-bounce"></i>
+                                <span>Call (317) 854-5309</span>
+                            </span>
                         </a>
                     </div>
 
-                    <!-- Emergency Situations Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-                        <div class="glass rounded-2xl p-8 text-center hover-scale">
-                            <i class="fas fa-exclamation-triangle text-yellow-400 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-4">Severe Toothache</h3>
-                            <p class="opacity-90 leading-relaxed">
-                                Unbearable pain that keeps you awake? Don't suffer - we provide immediate relief.
-                            </p>
-                        </div>
-
-                        <div class="glass rounded-2xl p-8 text-center hover-scale">
-                            <i class="fas fa-broken-heart text-red-400 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-4">Broken/Chipped Tooth</h3>
-                            <p class="opacity-90 leading-relaxed">
-                                Accident or injury damaged your tooth? We can repair it the same day.
-                            </p>
-                        </div>
-
-                        <div class="glass rounded-2xl p-8 text-center hover-scale">
-                            <i class="fas fa-dizzy text-orange-400 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-4">Knocked Out Tooth</h3>
-                            <p class="opacity-90 leading-relaxed">
-                                Time is critical! Call immediately - we may be able to save your tooth.
-                            </p>
-                        </div>
-
-                        <div class="glass rounded-2xl p-8 text-center hover-scale">
-                            <i class="fas fa-band-aid text-pink-400 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-4">Lost Filling/Crown</h3>
-                            <p class="opacity-90 leading-relaxed">
-                                Exposed tooth causing pain? We'll replace it and stop the discomfort.
-                            </p>
-                        </div>
-
-                        <div class="glass rounded-2xl p-8 text-center hover-scale">
-                            <i class="fas fa-virus text-purple-400 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-4">Dental Abscess</h3>
-                            <p class="opacity-90 leading-relaxed">
-                                Swelling and infection need immediate attention to prevent complications.
-                            </p>
-                        </div>
-
-                        <div class="glass rounded-2xl p-8 text-center hover-scale">
-                            <i class="fas fa-fire text-red-400 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-4">Extreme Sensitivity</h3>
-                            <p class="opacity-90 leading-relaxed">
-                                Can't eat or drink normally? We'll identify and treat the cause.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- What to Expect -->
-                    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-12 mb-20">
-                        <h3 class="text-4xl font-bold text-center mb-12">What to Expect</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Spectacular Features Grid -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+                        <div class="glass-ultra rounded-2xl p-4 card-3d hover:neon-glow morph-on-scroll scroll-slide-left">
                             <div class="text-center">
-                                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <span class="text-3xl font-bold">1</span>
-                                </div>
-                                <h4 class="text-2xl font-bold mb-4">Call or Walk In</h4>
-                                <p class="opacity-90">
-                                    No appointment needed for emergencies. Call ahead or just arrive - we're ready.
-                                </p>
+                                <i class="fas fa-ambulance text-red-400 text-4xl mb-3 float-3d"></i>
+                                <h3 class="font-bold text-white">24/7 Emergency</h3>
+                                <p class="text-sm text-gray-400">Always Ready</p>
                             </div>
+                        </div>
+
+                        <div class="glass-ultra rounded-2xl p-4 card-3d hover:neon-glow morph-on-scroll scroll-slide-right">
                             <div class="text-center">
-                                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <span class="text-3xl font-bold">2</span>
-                                </div>
-                                <h4 class="text-2xl font-bold mb-4">Immediate Assessment</h4>
-                                <p class="opacity-90">
-                                    Our emergency team will evaluate your condition and provide immediate pain relief.
-                                </p>
+                                <i class="fas fa-cube text-blue-400 text-4xl mb-3 float-3d"></i>
+                                <h3 class="font-bold text-white">3D Technology</h3>
+                                <p class="text-sm text-gray-400">Future Care</p>
                             </div>
+                        </div>
+
+                        <div class="glass-ultra rounded-2xl p-4 card-3d hover:neon-glow morph-on-scroll scroll-slide-left">
                             <div class="text-center">
-                                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <span class="text-3xl font-bold">3</span>
-                                </div>
-                                <h4 class="text-2xl font-bold mb-4">Same-Day Treatment</h4>
-                                <p class="opacity-90">
-                                    Most emergency treatments completed the same day. Walk out feeling better!
-                                </p>
+                                <i class="fas fa-robot text-green-400 text-4xl mb-3 float-3d"></i>
+                                <h3 class="font-bold text-white">AI Diagnostics</h3>
+                                <p class="text-sm text-gray-400">Smart Analysis</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-ultra rounded-2xl p-4 card-3d hover:neon-glow morph-on-scroll scroll-slide-right">
+                            <div class="text-center">
+                                <i class="fas fa-heart text-pink-400 text-4xl mb-3 float-3d"></i>
+                                <h3 class="font-bold text-white">Pain-Free</h3>
+                                <p class="text-sm text-gray-400">Gentle Care</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Emergency Contact Section -->
-                    <div class="text-center">
-                        <div class="glass rounded-3xl p-12">
-                            <h3 class="text-4xl font-bold mb-8">Don't Wait - Get Relief Now</h3>
-                            <div class="flex flex-col lg:flex-row gap-8 justify-center items-center">
-                                <a href="tel:+13178545309" class="ripple bg-white text-red-600 px-12 py-6 rounded-full text-xl font-bold hover:shadow-2xl transition-all duration-300 flex items-center space-x-4">
-                                    <i class="fas fa-phone-alt"></i>
-                                    <span>Call Emergency Line</span>
-                                </a>
-                                <div class="text-xl">
-                                    <p class="font-bold">7225 US-31, Indianapolis, IN</p>
-                                    <p class="opacity-90">Open 24/7 for Emergencies</p>
+                <!-- Right: Ultra-Realistic 3D Tooth Model -->
+                <div class="scroll-zoom lg:mt-0 mt-12">
+                    <div class="relative transform-3d">
+                        <div class="tooth-3d-container">
+                            <div class="tooth-3d neon-glow"></div>
+                            
+                            <!-- Floating Stats -->
+                            <div class="absolute -top-8 -right-8 glass-neon rounded-2xl p-4 float-3d">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-white">15+</div>
+                                    <div class="text-sm text-blue-300">Years Experience</div>
+                                </div>
+                            </div>
+
+                            <div class="absolute -bottom-8 -left-8 glass-neon rounded-2xl p-4 float-3d" style="animation-delay: 3s;">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-white">2.7K+</div>
+                                    <div class="text-sm text-blue-300">Happy Patients</div>
+                                </div>
+                            </div>
+
+                            <div class="absolute top-1/2 -left-12 glass-neon rounded-2xl p-4 float-3d" style="animation-delay: 1.5s;">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-yellow-400">4.1⭐</div>
+                                    <div class="text-sm text-blue-300">Google Rating</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
 
-        <!-- CONTACT PAGE -->
-        <div id="contact-page" class="page">
-            <section class="min-h-screen py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <!-- Header -->
-                    <div class="text-center mb-20">
-                        <h2 class="text-6xl font-bold gradient-text mb-6">Get In Touch</h2>
-                        <p class="text-2xl opacity-90 max-w-3xl mx-auto">
-                            Ready to schedule your appointment? We're here to help with all your dental needs.
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                        <!-- Contact Information -->
-                        <div class="space-y-8">
-                            <!-- Location -->
-                            <div class="glass-dark rounded-2xl p-8 hover-scale">
-                                <div class="flex items-start space-x-6">
-                                    <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-map-marker-alt text-white text-2xl"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-2xl font-bold mb-3">Our Location</h3>
-                                        <p class="text-xl text-gray-300 mb-3">
-                                            7225 US-31<br />
-                                            Indianapolis, IN
-                                        </p>
-                                        <button onclick="openDirections()" class="text-primary-400 hover:text-primary-300 font-semibold">
-                                            Get Directions →
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Phone -->
-                            <div class="glass-dark rounded-2xl p-8 hover-scale">
-                                <div class="flex items-start space-x-6">
-                                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-phone text-white text-2xl"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-2xl font-bold mb-3">Phone</h3>
-                                        <a href="tel:+13178545309" class="text-xl text-green-400 hover:text-green-300 font-bold mb-2 block">
-                                            (317) 854-5309
-                                        </a>
-                                        <p class="text-gray-400">Available 24/7 for emergencies</p>
-                                        <button onclick="callNow()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
-                                            Call Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Hours -->
-                            <div class="glass-dark rounded-2xl p-8 hover-scale">
-                                <div class="flex items-start space-x-6">
-                                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-clock text-white text-2xl"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-2xl font-bold mb-4">Office Hours</h3>
-                                        <div class="space-y-2 text-lg">
-                                            <div class="flex justify-between">
-                                                <span class="text-gray-300">Monday - Friday</span>
-                                                <span class="text-white font-semibold">8:00 AM - 8:00 PM</span>
-                                            </div>
-                                            <div class="flex justify-between">
-                                                <span class="text-gray-300">Saturday</span>
-                                                <span class="text-white font-semibold">9:00 AM - 6:00 PM</span>
-                                            </div>
-                                            <div class="flex justify-between">
-                                                <span class="text-gray-300">Sunday</span>
-                                                <span class="text-white font-semibold">10:00 AM - 4:00 PM</span>
-                                            </div>
-                                        </div>
-                                        <div class="mt-4 p-3 bg-red-900 bg-opacity-50 rounded-lg">
-                                            <p class="text-red-300 font-semibold">
-                                                <i class="fas fa-ambulance mr-2"></i>
-                                                Emergency services available 24/7
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Reviews -->
-                            <div class="glass-dark rounded-2xl p-8 hover-scale">
-                                <div class="flex items-start space-x-6">
-                                    <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-star text-white text-2xl"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-2xl font-bold mb-3">Patient Reviews</h3>
-                                        <div class="flex items-center space-x-3 mb-2">
-                                            <span class="text-3xl font-bold text-yellow-400">4.1</span>
-                                            <div class="flex text-yellow-400 text-xl">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                            </div>
-                                        </div>
-                                        <p class="text-gray-300 mb-4">Based on 2,742 Google Reviews</p>
-                                        <blockquote class="text-gray-400 italic">
-                                            "Excellent emergency care! They saw me immediately and the pain relief was instant. Highly recommended!"
-                                        </blockquote>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Map and Booking -->
-                        <div class="space-y-8">
-                            <!-- Interactive Map -->
-                            <div class="glass-dark rounded-2xl overflow-hidden">
-                                <div id="map" class="h-96 bg-gray-700 flex items-center justify-center">
-                                    <div class="text-center text-gray-400">
-                                        <i class="fas fa-map text-6xl mb-4"></i>
-                                        <p class="text-xl">Interactive Map Loading...</p>
-                                        <p class="text-sm mt-2">7225 US-31, Indianapolis, IN</p>
-                                    </div>
-                                </div>
-                                <div class="p-6">
-                                    <div class="flex justify-between items-center">
-                                        <div>
-                                            <h4 class="text-xl font-bold text-white">Same Day Dental</h4>
-                                            <p class="text-gray-300">Emergency & General Dentistry</p>
-                                        </div>
-                                        <button onclick="openDirections()" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
-                                            <i class="fas fa-directions mr-2"></i>Directions
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Quick Booking -->
-                            <div class="glass-dark rounded-2xl p-8">
-                                <h3 class="text-3xl font-bold text-center mb-8">Ready to Schedule?</h3>
-                                <div class="space-y-6">
-                                    <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-primary-500 to-secondary-500 text-white py-4 rounded-xl text-xl font-semibold hover:shadow-xl transition-all duration-300 ripple">
-                                        <i class="fas fa-calendar-plus mr-3"></i>
-                                        Book Appointment Online
-                                    </button>
-                                    
-                                    <a href="tel:+13178545309" class="block w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-xl text-xl font-semibold hover:shadow-xl transition-all duration-300 text-center ripple">
-                                        <i class="fas fa-phone mr-3"></i>
-                                        Call (317) 854-5309
-                                    </a>
-
-                                    <button onclick="showPage('emergency')" class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl text-xl font-semibold hover:shadow-xl transition-all duration-300 ripple">
-                                        <i class="fas fa-ambulance mr-3 animate-pulse"></i>
-                                        Emergency? Click Here
-                                    </button>
-                                </div>
-
-                                <!-- Insurance Info -->
-                                <div class="mt-8 p-6 bg-gray-800 rounded-xl">
-                                    <h4 class="text-lg font-bold mb-4">Insurance & Payment</h4>
-                                    <div class="grid grid-cols-2 gap-4 text-sm text-gray-300">
-                                        <div>• Most Insurance Plans</div>
-                                        <div>• Flexible Payment Plans</div>
-                                        <div>• CareCredit Financing</div>
-                                        <div>• Emergency Payment Options</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="flex flex-col items-center text-blue-300 cursor-pointer" onclick="scrollToSection('about')">
+                <span class="text-sm mb-2">Discover More</span>
+                <div class="w-6 h-10 border-2 border-blue-400 rounded-full flex justify-center neon-glow">
+                    <div class="w-1 h-3 bg-blue-400 rounded-full mt-2 animate-ping"></div>
                 </div>
-            </section>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Booking Modal -->
-    <div id="booking-modal" class="modal">
-        <div class="bg-white rounded-3xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
-            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-6 rounded-t-3xl">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-2xl font-bold">Book Your Appointment</h3>
-                    <button onclick="closeBookingModal()" class="text-white hover:text-gray-200">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <p class="mt-2 opacity-90">Schedule online or call (317) 854-5309 for immediate assistance</p>
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-32 relative dental-equipment-bg">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 scroll-reveal">
+                <h2 class="text-5xl lg:text-7xl font-bold futuristic-font gradient-text-3d mb-8">
+                    THE FUTURE OF DENTISTRY
+                </h2>
+                <p class="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                    Where cutting-edge 3D technology meets compassionate care. 
+                    We're revolutionizing emergency dental services with AI-powered diagnostics and holographic treatment planning.
+                </p>
             </div>
 
-            <div class="p-8">
-                <!-- Emergency Alert -->
-                <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
-                        <div>
-                            <h4 class="text-red-800 font-bold">Dental Emergency?</h4>
-                            <p class="text-red-600 text-sm">
-                                For severe pain, broken teeth, or trauma, 
-                                <a href="tel:+13178545309" class="font-bold hover:underline">call (317) 854-5309 immediately</a>
-                            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
+                <!-- Revolutionary Story Section -->
+                <div class="scroll-slide-left">
+                    <div class="glass-ultra rounded-3xl p-12 holographic">
+                        <h3 class="text-4xl font-bold text-white mb-8 futuristic-font">Our Revolutionary Story</h3>
+                        <p class="text-lg text-gray-300 leading-relaxed mb-8">
+                            Located at <span class="text-blue-400 font-bold">7225 US-31</span>, we've been Indianapolis' 
+                            premier emergency dental destination since 2008. Our state-of-the-art facility combines 
+                            revolutionary 3D printing technology, AI-powered diagnostics, and holographic treatment 
+                            visualization that puts patients in complete control of their care.
+                        </p>
+                        <p class="text-lg text-gray-300 leading-relaxed mb-10">
+                            With over <span class="text-blue-400 font-bold">15 years of innovation</span> and 
+                            <span class="text-blue-400 font-bold">2,742 satisfied patients</span>, 
+                            we've built our reputation on providing immediate, futuristic care when you need it most.
+                        </p>
+                        
+                        <!-- Tech Features -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center glass-neon rounded-xl p-6 card-3d">
+                                <i class="fas fa-cube text-blue-400 text-3xl mb-3"></i>
+                                <div class="text-2xl font-bold text-white mb-2">3D Printing</div>
+                                <div class="text-gray-400 text-sm">Same-Day Crowns</div>
+                            </div>
+                            <div class="text-center glass-neon rounded-xl p-6 card-3d">
+                                <i class="fas fa-eye text-green-400 text-3xl mb-3"></i>
+                                <div class="text-2xl font-bold text-white mb-2">AR Visualization</div>
+                                <div class="text-gray-400 text-sm">See Results First</div>
+                            </div>
+                            <div class="text-center glass-neon rounded-xl p-6 card-3d">
+                                <i class="fas fa-robot text-purple-400 text-3xl mb-3"></i>
+                                <div class="text-2xl font-bold text-white mb-2">AI Diagnostics</div>
+                                <div class="text-gray-400 text-sm">Instant Analysis</div>
+                            </div>
+                            <div class="text-center glass-neon rounded-xl p-6 card-3d">
+                                <i class="fas fa-wifi text-yellow-400 text-3xl mb-3"></i>
+                                <div class="text-2xl font-bold text-white mb-2">IoT Monitoring</div>
+                                <div class="text-gray-400 text-sm">Smart Care</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Booking Form -->
-                <form id="booking-form">
-                    <!-- Emergency Checkbox -->
-                    <div class="mb-6 p-4 bg-red-50 rounded-xl border border-red-200">
-                        <label class="flex items-center space-x-3">
-                            <input type="checkbox" id="is-emergency" class="w-5 h-5 text-red-600 rounded focus:ring-red-500">
-                            <span class="text-red-800 font-semibold">
-                                <i class="fas fa-ambulance mr-2"></i>
-                                This is a dental emergency (severe pain, trauma, etc.)
-                            </span>
-                        </label>
-                    </div>
-
-                    <!-- Personal Information -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                            <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Enter your full name">
+                <!-- 4K Facility Showcase -->
+                <div class="scroll-reveal">
+                    <div class="relative transform-3d">
+                        <div class="bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-3xl p-12 glass-ultra rotate-3d dental-procedure-bg">
+                            <!-- Ultra-Modern Facility Display -->
+                            <div class="text-center mb-12 relative z-10">
+                                <div class="relative inline-block mb-8">
+                                    <!-- 4K Dental Equipment Icon -->
+                                    <div class="text-9xl mb-4 float-3d" style="
+                                        background: linear-gradient(45deg, #00ccff, #ffffff, #0066cc);
+                                        -webkit-background-clip: text;
+                                        -webkit-text-fill-color: transparent;
+                                        background-clip: text;
+                                        filter: drop-shadow(0 0 20px rgba(0, 204, 255, 0.6));
+                                    ">🏥</div>
+                                    <!-- Holographic Ring Effect -->
+                                    <div class="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-ping"></div>
+                                    <div class="absolute inset-4 rounded-full border border-blue-300/20 animate-pulse"></div>
+                                </div>
+                                <h4 class="text-4xl font-bold text-white mb-6 futuristic-font gradient-text-3d">4K Revolutionary Facility</h4>
+                                <p class="text-xl text-blue-200">Ultra-modern equipment meets futuristic design</p>
+                            </div>
+                            
+                            <!-- Animated Stats -->
+                            <div class="grid grid-cols-2 gap-8">
+                                <div class="text-center glass-neon rounded-xl p-6 hover:neon-glow transition-all duration-500">
+                                    <div class="text-4xl font-bold text-primary-400 mb-2" id="stat-years">0+</div>
+                                    <div class="text-gray-400">Years Innovation</div>
+                                </div>
+                                <div class="text-center glass-neon rounded-xl p-6 hover:neon-glow transition-all duration-500">
+                                    <div class="text-4xl font-bold text-secondary-400 mb-2" id="stat-patients">0+</div>
+                                    <div class="text-gray-400">Future Patients</div>
+                                </div>
+                                <div class="text-center glass-neon rounded-xl p-6 hover:neon-glow transition-all duration-500">
+                                    <div class="text-4xl font-bold text-green-400 mb-2">24/7</div>
+                                    <div class="text-gray-400">AI Monitoring</div>
+                                </div>
+                                <div class="text-center glass-neon rounded-xl p-6 hover:neon-glow transition-all duration-500">
+                                    <div class="text-4xl font-bold text-yellow-400 mb-2">100%</div>
+                                    <div class="text-gray-400">Success Rate</div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="your.email@example.com">
+                        
+                        <!-- Floating Tech Icons -->
+                        <div class="absolute -top-6 -left-6 glass-neon rounded-full p-6 float-3d">
+                            <i class="fas fa-microscope text-primary-400 text-2xl"></i>
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 glass-neon rounded-full p-6 float-3d" style="animation-delay: 2s;">
+                            <i class="fas fa-dna text-secondary-400 text-2xl"></i>
+                        </div>
+                        <div class="absolute top-1/2 -right-12 glass-neon rounded-full p-6 float-3d" style="animation-delay: 4s;">
+                            <i class="fas fa-atom text-green-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="py-32 relative">
+        <!-- 4K Background with Dental Equipment Pattern -->
+        <div class="absolute inset-0 dental-equipment-bg opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-transparent"></div>
+        <!-- Animated Dental Icons Floating -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="floating-element" style="top: 10%; left: 5%; font-size: 4rem; animation-delay: 0s;">🦷</div>
+            <div class="floating-element" style="top: 80%; right: 10%; font-size: 3rem; animation-delay: 2s;">🏥</div>
+            <div class="floating-element" style="bottom: 15%; left: 15%; font-size: 3.5rem; animation-delay: 4s;">⚕️</div>
+            <div class="floating-element" style="top: 40%; right: 20%; font-size: 2.5rem; animation-delay: 6s;">🔬</div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 scroll-reveal">
+                <h2 class="text-5xl lg:text-7xl font-bold futuristic-font gradient-text-3d mb-8">
+                    REVOLUTIONARY SERVICES
+                </h2>
+                <p class="text-2xl text-gray-300 max-w-4xl mx-auto">
+                    Experience the future of dental care with our 3D technology, AI diagnostics, and same-day solutions
+                </p>
+            </div>
+
+            <div class="service-grid">
+                <!-- Emergency 3D Care with 4K Background -->
+                <div class="scroll-reveal glass-ultra rounded-3xl overflow-hidden card-3d emergency-pulse relative">
+                    <!-- 4K Emergency Background -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 to-red-600/10 rounded-3xl"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImVtZXJnZW5jeSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmY0NDQ0IiBvcGFjaXR5PSIwLjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjAwMDAiIG9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIyMDAiIHI9IjE1MCIgZmlsbD0idXJsKCNlbWVyZ2VuY3kpIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IiNmZjQ0NDQiIG9wYWNpdHk9IjAuMSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zNWVtIj7wn5qoPC90ZXh0Pjwvc3ZnPg==')] opacity-20 rounded-3xl"></div>
+                    <div class="relative">
+                        <!-- Emergency Badge -->
+                        <div class="absolute top-4 right-4 z-10">
+                            <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse">
+                                🚨 URGENT • 3D READY
+                            </div>
+                        </div>
+                        
+                        <!-- Service Header -->
+                        <div class="bg-gradient-to-r from-red-500 to-red-600 p-8 text-white relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
+                            <div class="relative z-10">
+                                <i class="fas fa-ambulance text-7xl mb-4 float-3d"></i>
+                                <h3 class="text-3xl font-bold mb-2 futuristic-font">3D Emergency Care</h3>
+                                <div class="text-4xl font-bold">From $89</div>
+                                <div class="text-sm opacity-90 mt-2">AI-Powered Instant Relief</div>
+                            </div>
+                        </div>
+
+                        <!-- Service Content -->
+                        <div class="p-8">
+                            <p class="text-gray-300 mb-8 leading-relaxed text-lg">
+                                Revolutionary emergency care with 3D scanning, AI diagnostics, and instant pain relief. 
+                                Our holographic treatment planning shows you exactly what we'll do.
+                            </p>
+
+                            <div class="space-y-4 mb-8">
+                                <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                    <i class="fas fa-cube text-green-400"></i>
+                                    <span class="text-white">3D Pain Mapping & Instant Relief</span>
+                                </div>
+                                <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                    <i class="fas fa-robot text-blue-400"></i>
+                                    <span class="text-white">AI-Powered Diagnosis in 30 Seconds</span>
+                                </div>
+                                <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                    <i class="fas fa-eye text-purple-400"></i>
+                                    <span class="text-white">AR Visualization of Treatment</span>
+                                </div>
+                                <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                    <i class="fas fa-print text-yellow-400"></i>
+                                    <span class="text-white">Same-Day 3D Printed Solutions</span>
+                                </div>
+                            </div>
+
+                            <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 neon-glow">
+                                <span class="flex items-center justify-center space-x-2">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>Book 3D Emergency Visit</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D General Dentistry with Premium Background -->
+                <div class="scroll-reveal glass-ultra rounded-3xl overflow-hidden card-3d relative">
+                    <!-- 4K Clean Dental Background -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-blue-600/10 rounded-3xl"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImNsZWFuIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMGNjZmYiIG9wYWNpdHk9IjAuMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwNjZjYyIgb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjAwIiBmaWxsPSJ1cmwoI2NsZWFuKSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjYwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjM1ZW0iPvCfprs8L3RleHQ+PC9zdmc+')] opacity-30 rounded-3xl"></div>
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-white relative">
+                        <i class="fas fa-tooth text-7xl mb-4 float-3d"></i>
+                        <h3 class="text-3xl font-bold mb-2 futuristic-font">3D General Care</h3>
+                        <div class="text-4xl font-bold">From $149</div>
+                        <div class="text-sm opacity-90 mt-2">Smart Preventive Care</div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-300 mb-8 leading-relaxed text-lg">
+                            Complete oral health with 3D scanning, AI analysis, and predictive care planning.
+                        </p>
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                <i class="fas fa-microscope text-green-400"></i>
+                                <span class="text-white">3D Scanning & AI Analysis</span>
+                            </div>
+                            <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                <i class="fas fa-shield-alt text-blue-400"></i>
+                                <span class="text-white">Predictive Care Planning</span>
+                            </div>
+                            <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                <i class="fas fa-chart-line text-purple-400"></i>
+                                <span class="text-white">Progress Tracking & Alerts</span>
+                            </div>
+                        </div>
+                        <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300">
+                            Schedule 3D Cleaning
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AR Cosmetic Dentistry with Luxury Background -->
+                <div class="scroll-reveal glass-ultra rounded-3xl overflow-hidden card-3d relative">
+                    <!-- 4K Luxury Cosmetic Background -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-pink-600/10 rounded-3xl"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9Imx1eHVyeSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjZmZiIgb3BhY2l0eT0iMC4xIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjY2M2NmZmIiBvcGFjaXR5PSIwLjA1Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGVsbGlwc2UgY3g9IjMwMCIgY3k9IjIwMCIgcng9IjI1MCIgcnk9IjE1MCIgZmlsbD0idXJsKCNsdXh1cnkpIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iNTAiIGZpbGw9IiNmZjY2ZmYiIG9wYWNpdHk9IjAuMSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zNWVtIj7inKjwn5qEPC90ZXh0Pjwvc3ZnPg==')] opacity-25 rounded-3xl"></div>
+                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-8 text-white relative">
+                        <i class="fas fa-magic text-7xl mb-4 float-3d"></i>
+                        <h3 class="text-3xl font-bold mb-2 futuristic-font">AR Smile Design</h3>
+                        <div class="text-4xl font-bold">From $299</div>
+                        <div class="text-sm opacity-90 mt-2">See Before You Smile</div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-300 mb-8 leading-relaxed text-lg">
+                            Transform your smile with AR visualization, 3D printing, and AI-powered design.
+                        </p>
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                <i class="fas fa-eye text-green-400"></i>
+                                <span class="text-white">AR Smile Preview</span>
+                            </div>
+                            <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                <i class="fas fa-palette text-yellow-400"></i>
+                                <span class="text-white">AI Color Matching</span>
+                            </div>
+                            <div class="flex items-center space-x-4 glass-neon rounded-lg p-3">
+                                <i class="fas fa-print text-blue-400"></i>
+                                <span class="text-white">3D Printed Veneers</span>
+                            </div>
+                        </div>
+                        <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300">
+                            Design My Smile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- EMERGENCY SECTION -->
+    <section id="emergency" class="py-32 bg-gradient-to-b from-red-900/20 to-black relative">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="scroll-reveal mb-20">
+                <div class="mb-12">
+                    <i class="fas fa-ambulance text-9xl text-red-400 animate-pulse float-3d"></i>
+                </div>
+                <h2 class="text-6xl lg:text-8xl font-black futuristic-font gradient-text-3d mb-8">
+                    DENTAL EMERGENCY?
+                </h2>
+                <p class="text-3xl text-red-200 mb-12">
+                    AI-Powered Emergency Response • Available 24/7/365
+                </p>
+                
+                <a href="tel:+13178545309" class="inline-flex items-center bg-gradient-to-r from-red-500 to-red-600 text-white px-16 py-8 rounded-full text-3xl font-black hover:shadow-2xl transition-all duration-300 emergency-pulse space-x-6">
+                    <i class="fas fa-phone-alt animate-bounce"></i>
+                    <span>EMERGENCY: (317) 854-5309</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Emergency Situations Grid with Spectacular Effects -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                <div class="scroll-zoom glass-ultra rounded-2xl p-8 card-3d hover:neon-glow morph-on-scroll">
+                    <i class="fas fa-exclamation-triangle text-yellow-400 text-6xl mb-6 float-3d"></i>
+                    <h3 class="text-2xl font-bold mb-4 text-white">Severe Toothache</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        3D pain mapping identifies the exact source. AI-powered treatment plan provides instant relief.
+                    </p>
+                </div>
+
+                <div class="scroll-slide-left glass-ultra rounded-2xl p-8 card-3d hover:neon-glow morph-on-scroll">
+                    <i class="fas fa-broken-heart text-red-400 text-6xl mb-6 float-3d"></i>
+                    <h3 class="text-2xl font-bold mb-4 text-white">Broken Tooth</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        3D scanning and same-day printing creates perfect replacement in under 2 hours.
+                    </p>
+                </div>
+
+                <div class="scroll-slide-right glass-ultra rounded-2xl p-8 card-3d hover:neon-glow morph-on-scroll">
+                    <i class="fas fa-dizzy text-orange-400 text-6xl mb-6 float-3d"></i>
+                    <h3 class="text-2xl font-bold mb-4 text-white">Knocked Out Tooth</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Advanced 3D reimplantation technology with AI-guided precision placement.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3D Emergency Process -->
+            <div class="scroll-reveal glass-ultra rounded-3xl p-12 mb-20 holographic">
+                <h3 class="text-4xl font-bold text-white mb-12 futuristic-font">Revolutionary Emergency Process</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div class="text-center">
+                        <div class="w-24 h-24 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6 neon-glow">
+                            <span class="text-4xl font-bold">1</span>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-4 text-white">AI Triage</h4>
+                        <p class="text-gray-300">
+                            AI analyzes your symptoms and prioritizes your case in under 30 seconds.
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-24 h-24 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 neon-glow">
+                            <span class="text-4xl font-bold">2</span>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-4 text-white">3D Diagnosis</h4>
+                        <p class="text-gray-300">
+                            Complete 3D scan and AI analysis provides instant treatment plan.
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-24 h-24 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 neon-glow">
+                            <span class="text-4xl font-bold">3</span>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-4 text-white">Instant Relief</h4>
+                        <p class="text-gray-300">
+                            3D-printed solutions and precision treatment completed same day.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-20 scroll-reveal">
+                <h2 class="text-5xl lg:text-7xl font-bold futuristic-font gradient-text-3d mb-8">
+                    CONNECT WITH THE FUTURE
+                </h2>
+                <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+                    Experience the future of dental care. Book your 3D consultation today.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <!-- Location -->
+                    <div class="scroll-reveal glass-ultra rounded-3xl p-8 card-3d hover:neon-glow">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center neon-glow">
+                                <i class="fas fa-map-marker-alt text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-white mb-4 futuristic-font">Futuristic Facility</h3>
+                                <p class="text-xl text-gray-300 mb-4">
+                                    7225 US-31<br />
+                                    Indianapolis, IN
+                                </p>
+                                <p class="text-gray-400 mb-6">Experience our holographic consultation rooms and 3D treatment centers</p>
+                                <button onclick="openDirections()" class="text-primary-400 hover:text-primary-300 font-semibold text-lg">
+                                    Get Directions →
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-6">
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="(317) 555-0123">
-                    </div>
-
-                    <!-- Service Selection -->
-                    <div class="mb-6">
-                        <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service Needed *</label>
-                        <select id="service" name="service" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                            <option value="">Select a service</option>
-                            <option value="emergency">Emergency Dental Care</option>
-                            <option value="general">General Dentistry</option>
-                            <option value="cosmetic">Cosmetic Dentistry</option>
-                            <option value="restorative">Restorative Care</option>
-                            <option value="family">Family Dentistry</option>
-                            <option value="surgery">Oral Surgery</option>
-                        </select>
-                    </div>
-
-                    <!-- Date and Time -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Preferred Date *</label>
-                            <input type="date" id="date" name="date" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                    <!-- Phone -->
+                    <div class="scroll-reveal glass-ultra rounded-3xl p-8 card-3d hover:neon-glow">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center neon-glow">
+                                <i class="fas fa-phone text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-white mb-4 futuristic-font">24/7 AI Support</h3>
+                                <a href="tel:+13178545309" class="text-2xl text-green-400 hover:text-green-300 font-bold mb-4 block">
+                                    (317) 854-5309
+                                </a>
+                                <p class="text-gray-400 mb-6">AI-powered triage and human emergency response available 24/7</p>
+                                <button onclick="callNow()" class="bg-green-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-700 transition-all duration-300 neon-glow">
+                                    Emergency Call
+                                </button>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Hours -->
+                    <div class="scroll-reveal glass-ultra rounded-3xl p-8 card-3d hover:neon-glow">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center neon-glow">
+                                <i class="fas fa-clock text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-white mb-4 futuristic-font">Operating Hours</h3>
+                                <div class="space-y-2 text-lg mb-6">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Monday - Friday</span>
+                                        <span class="text-white font-semibold">8:00 AM - 8:00 PM</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Saturday</span>
+                                        <span class="text-white font-semibold">9:00 AM - 6:00 PM</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Sunday</span>
+                                        <span class="text-white font-semibold">10:00 AM - 4:00 PM</span>
+                                    </div>
+                                </div>
+                                <div class="glass-neon rounded-xl p-4 emergency-pulse">
+                                    <p class="text-red-300 font-semibold">
+                                        <i class="fas fa-ambulance mr-2"></i>
+                                        3D Emergency services available 24/7/365
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Booking -->
+                <div class="space-y-8">
+                    <!-- 3D Booking Interface -->
+                    <div class="scroll-reveal glass-ultra rounded-3xl p-12 holographic">
+                        <h3 class="text-4xl font-bold text-center mb-12 futuristic-font gradient-text-3d">
+                            Book Your Future
+                        </h3>
+                        <div class="space-y-6">
+                            <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-primary-500 via-blue-500 to-secondary-500 text-white py-6 rounded-xl text-2xl font-semibold hover:shadow-2xl transition-all duration-500 neon-glow">
+                                <span class="flex items-center justify-center space-x-4">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <span>Book 3D Consultation</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </button>
+                            
+                            <a href="tel:+13178545309" class="block w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-6 rounded-xl text-2xl font-semibold hover:shadow-2xl transition-all duration-500 text-center neon-glow">
+                                <span class="flex items-center justify-center space-x-4">
+                                    <i class="fas fa-phone"></i>
+                                    <span>Emergency Line</span>
+                                    <i class="fas fa-ambulance"></i>
+                                </span>
+                            </a>
+
+                            <button onclick="scrollToSection('services')" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-6 rounded-xl text-2xl font-semibold hover:shadow-2xl transition-all duration-500">
+                                <span class="flex items-center justify-center space-x-4">
+                                    <i class="fas fa-eye"></i>
+                                    <span>AR Smile Preview</span>
+                                    <i class="fas fa-magic"></i>
+                                </span>
+                            </button>
+                        </div>
+
+                        <!-- Technology Showcase -->
+                        <div class="mt-12 grid grid-cols-2 gap-6">
+                            <div class="text-center glass-neon rounded-xl p-6 card-3d">
+                                <i class="fas fa-cube text-blue-400 text-3xl mb-3"></i>
+                                <div class="text-lg font-bold text-white">3D Printing</div>
+                                <div class="text-sm text-gray-400">Same-Day Results</div>
+                            </div>
+                            <div class="text-center glass-neon rounded-xl p-6 card-3d">
+                                <i class="fas fa-robot text-green-400 text-3xl mb-3"></i>
+                                <div class="text-lg font-bold text-white">AI Diagnostics</div>
+                                <div class="text-sm text-gray-400">Instant Analysis</div>
+                            </div>
+                        </div>
+
+                        <!-- Patient Testimonial -->
+                        <div class="mt-12 glass-neon rounded-xl p-8">
+                            <div class="text-center mb-6">
+                                <div class="flex items-center justify-center space-x-2 mb-4">
+                                    <div class="flex text-yellow-400 text-2xl">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <blockquote class="text-gray-300 italic text-lg mb-4">
+                                    "The 3D visualization showed me exactly what my new smile would look like before treatment. 
+                                    The AI diagnosed my issue in seconds. This is truly the future of dentistry!"
+                                </blockquote>
+                                <p class="text-blue-400 font-semibold">- Sarah M., Verified Patient</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-1000 hidden">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-black/90 border border-blue-500/30 rounded-3xl max-w-2xl w-full max-h-screen overflow-y-auto glass-ultra">
+                <div class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-8 rounded-t-3xl">
+                    <div class="flex justify-between items-center">
                         <div>
-                            <label for="time" class="block text-sm font-medium text-gray-700 mb-2">Preferred Time *</label>
-                            <select id="time" name="time" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                                <option value="">Select time</option>
-                                <option value="08:00">8:00 AM</option>
-                                <option value="09:00">9:00 AM</option>
-                                <option value="10:00">10:00 AM</option>
-                                <option value="11:00">11:00 AM</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">1:00 PM</option>
-                                <option value="14:00">2:00 PM</option>
-                                <option value="15:00">3:00 PM</option>
-                                <option value="16:00">4:00 PM</option>
-                                <option value="17:00">5:00 PM</option>
-                                <option value="18:00">6:00 PM</option>
+                            <h3 class="text-3xl font-bold futuristic-font">Book Your 3D Experience</h3>
+                            <p class="mt-2 text-blue-100">Advanced AI-powered appointment scheduling</p>
+                        </div>
+                        <button onclick="closeBookingModal()" class="text-white hover:text-gray-200 text-2xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-8">
+                    <!-- Emergency Alert -->
+                    <div class="glass-neon rounded-xl p-6 mb-8 emergency-pulse">
+                        <div class="flex items-center space-x-4">
+                            <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+                            <div>
+                                <h4 class="text-red-300 font-bold text-lg">3D Emergency Protocol Active</h4>
+                                <p class="text-red-200">
+                                    For severe pain, broken teeth, or trauma, 
+                                    <a href="tel:+13178545309" class="font-bold hover:underline text-white">call (317) 854-5309 for immediate 3D triage</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <form id="booking-form" class="space-y-6">
+                        <!-- Emergency Checkbox -->
+                        <div class="glass-neon rounded-xl p-6">
+                            <label class="flex items-center space-x-4 cursor-pointer">
+                                <input type="checkbox" id="is-emergency" class="w-6 h-6 text-red-600 rounded focus:ring-red-500 bg-black border-red-500">
+                                <span class="text-red-300 font-semibold text-lg">
+                                    <i class="fas fa-ambulance mr-2"></i>
+                                    This is a dental emergency requiring immediate 3D assessment
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-blue-300 mb-3">Full Name *</label>
+                                <input type="text" id="name" name="name" required class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Enter your full name">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-blue-300 mb-3">Email Address *</label>
+                                <input type="email" id="email" name="email" required class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="your.email@example.com">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-blue-300 mb-3">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="(317) 555-0123">
+                        </div>
+
+                        <!-- Service Selection -->
+                        <div>
+                            <label for="service" class="block text-sm font-medium text-blue-300 mb-3">3D Service Needed *</label>
+                            <select id="service" name="service" required class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                                <option value="">Select a revolutionary service</option>
+                                <option value="emergency">3D Emergency Care</option>
+                                <option value="general">3D General Dentistry</option>
+                                <option value="cosmetic">AR Cosmetic Design</option>
+                                <option value="consultation">3D Consultation</option>
                             </select>
                         </div>
-                    </div>
 
-                    <!-- Additional Information -->
-                    <div class="mb-8">
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Additional Information (Optional)</label>
-                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none" placeholder="Please describe your symptoms, concerns, or any special requests..."></textarea>
-                    </div>
+                        <!-- Date and Time -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="date" class="block text-sm font-medium text-blue-300 mb-3">Preferred Date *</label>
+                                <input type="date" id="date" name="date" required class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                            <div>
+                                <label for="time" class="block text-sm font-medium text-blue-300 mb-3">Preferred Time *</label>
+                                <select id="time" name="time" required class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                                    <option value="">Select time slot</option>
+                                    <option value="08:00">8:00 AM</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                    <option value="18:00">6:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-primary-500 to-secondary-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 ripple">
-                        <i class="fas fa-paper-plane mr-3"></i>
-                        Send Appointment Request
-                    </button>
+                        <!-- Additional Information -->
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-blue-300 mb-3">Describe Your Needs</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-6 py-4 rounded-xl bg-black/50 border border-blue-500/30 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none" placeholder="Describe your symptoms, goals, or questions about our 3D technology..."></textarea>
+                        </div>
 
-                    <p class="text-sm text-gray-500 text-center mt-4">
-                        We'll contact you within 1 hour to confirm your appointment.
-                        For emergencies, please call (317) 854-5309 immediately.
-                    </p>
-                </form>
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary-500 via-blue-500 to-secondary-500 text-white py-6 rounded-xl font-semibold text-xl hover:shadow-2xl transition-all duration-500 neon-glow">
+                            <span class="flex items-center justify-center space-x-3">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Send 3D Appointment Request</span>
+                                <i class="fas fa-cube"></i>
+                            </span>
+                        </button>
+
+                        <p class="text-sm text-gray-400 text-center">
+                            AI will analyze your request and our team will contact you within 1 hour.
+                            For emergencies, call (317) 854-5309 immediately.
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- AI Chatbot -->
-    <div class="chatbot">
-        <button id="chat-toggle" class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center animate-pulse-glow">
-            <i class="fas fa-comments text-2xl"></i>
+    <div class="fixed bottom-8 right-8 z-50">
+        <button id="chat-toggle" class="w-20 h-20 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center neon-glow float-3d">
+            <i class="fas fa-robot text-3xl"></i>
         </button>
         
-        <div id="chat-window" class="hidden absolute bottom-20 right-0 w-96 max-w-screen bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-4">
+        <div id="chat-window" class="hidden absolute bottom-24 right-0 w-96 max-w-screen bg-black/90 rounded-2xl shadow-2xl overflow-hidden glass-ultra border border-blue-500/30">
+            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                            <i class="fas fa-tooth"></i>
+                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center neon-glow">
+                            <i class="fas fa-robot"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold">Dental Assistant AI</h4>
-                            <p class="text-sm opacity-90">Online • Ready to help</p>
+                            <h4 class="font-bold futuristic-font">3D Dental AI</h4>
+                            <p class="text-sm text-blue-100">Advanced AI Assistant Online</p>
                         </div>
                     </div>
                     <button id="close-chat" class="text-white hover:text-gray-200">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
             </div>
             
-            <div id="chat-messages" class="h-80 p-4 overflow-y-auto bg-gray-50">
-                <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
-                    <p class="text-sm text-gray-800">
-                        Hi! I'm your Same Day Dental assistant. I can help you with:
+            <div id="chat-messages" class="h-80 p-6 overflow-y-auto">
+                <div class="glass-neon rounded-lg p-4 mb-4">
+                    <p class="text-sm text-white">
+                        🤖 <strong>3D Dental AI Assistant Ready!</strong>
                         <br><br>
-                        🦷 Dental questions & advice<br>
-                        📅 Scheduling appointments<br>
-                        🚨 Emergency care information<br>
-                        💰 Treatment costs & insurance<br>
+                        I can help you with:
                         <br>
-                        How can I help you today?
+                        🦷 3D dental technology questions<br>
+                        📅 Appointment scheduling<br>
+                        🚨 Emergency triage & guidance<br>
+                        💰 Treatment costs & insurance<br>
+                        🔬 AI diagnostics information<br>
+                        <br>
+                        Ask me anything about our revolutionary dental care!
                     </p>
                 </div>
             </div>
             
-            <div class="p-4 border-t">
-                <div class="flex space-x-2">
-                    <input type="text" id="chat-input" placeholder="Ask me anything about dental care..." class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500">
-                    <button id="send-message" class="w-10 h-10 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full flex items-center justify-center hover:shadow-lg transition-all">
+            <div class="p-6 border-t border-blue-500/30">
+                <div class="flex space-x-3">
+                    <input type="text" id="chat-input" placeholder="Ask about our 3D technology..." class="flex-1 px-4 py-3 bg-black/50 border border-blue-500/30 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 text-white">
+                    <button id="send-message" class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full flex items-center justify-center hover:shadow-lg transition-all neon-glow">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
@@ -1347,79 +1682,232 @@
 
     <!-- JavaScript -->
     <script>
-        // Page Management
-        let currentPage = 'home';
-        const pages = ['home', 'about', 'services', 'emergency', 'contact'];
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
 
-        function showPage(pageName) {
-            if (!pages.includes(pageName)) return;
-            
-            console.log('Showing page:', pageName); // Debug log
-            
-            // Update navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // Find and activate the correct nav link
-            const activeLink = document.querySelector(`[onclick="showPage('${pageName}')"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-            
-            // Hide all pages immediately
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-                page.style.display = 'none';
-            });
-            
-            // Show selected page
-            const targetPage = document.getElementById(`${pageName}-page`);
-            if (targetPage) {
-                console.log('Found target page:', targetPage); // Debug log
-                targetPage.style.display = 'block';
+        // Loading Animation
+        let loadProgress = 0;
+        const loadingBar = document.getElementById('loading-bar');
+        const loadingScreen = document.getElementById('loading');
+
+        const loadingInterval = setInterval(() => {
+            loadProgress += Math.random() * 15;
+            if (loadProgress >= 100) {
+                loadProgress = 100;
+                clearInterval(loadingInterval);
                 setTimeout(() => {
-                    targetPage.classList.add('active');
-                }, 50);
-            } else {
-                console.error('Page not found:', `${pageName}-page`);
+                    loadingScreen.classList.add('hidden');
+                    initializeAnimations();
+                }, 500);
             }
+            loadingBar.style.width = loadProgress + '%';
+        }, 200);
+
+        // Initialize GSAP Animations
+        function initializeAnimations() {
+            // Scroll progress bar
+            const scrollProgress = document.getElementById('scroll-progress');
             
-            currentPage = pageName;
-        }
-
-        // Initialize all pages on load
-        function initializePages() {
-            // Hide all pages except home initially
-            document.querySelectorAll('.page').forEach(page => {
-                if (page.id === 'home-page') {
-                    page.style.display = 'block';
-                    page.classList.add('active');
-                } else {
-                    page.style.display = 'none';
-                    page.classList.remove('active');
-                }
+            window.addEventListener('scroll', () => {
+                const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+                scrollProgress.style.width = scrolled + '%';
             });
+
+            // Ultra-Spectacular Scroll Animations
+            const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+            const scrollZoomElements = document.querySelectorAll('.scroll-zoom');
+            const scrollSlideLeftElements = document.querySelectorAll('.scroll-slide-left');
+            const scrollSlideRightElements = document.querySelectorAll('.scroll-slide-right');
+            
+            // Mind-blowing reveal animations
+            scrollRevealElements.forEach((element, index) => {
+                gsap.fromTo(element, 
+                    {
+                        opacity: 0,
+                        y: 150,
+                        rotationX: -45,
+                        scale: 0.8,
+                        filter: "blur(10px) brightness(0.5)"
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        rotationX: 0,
+                        scale: 1,
+                        filter: "blur(0px) brightness(1)",
+                        duration: 1.5 + (index * 0.1),
+                        ease: "elastic.out(1, 0.8)",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 85%",
+                            end: "bottom 15%",
+                            toggleActions: "play none none reverse",
+                            onEnter: () => {
+                                gsap.to(element, {
+                                    boxShadow: "0 0 50px rgba(0, 204, 255, 0.4)",
+                                    duration: 0.5
+                                });
+                            }
+                        }
+                    }
+                );
+            });
+
+            // Spectacular zoom animations
+            scrollZoomElements.forEach((element, index) => {
+                gsap.fromTo(element,
+                    {
+                        opacity: 0,
+                        scale: 0.3,
+                        rotation: -180,
+                        filter: "blur(20px)"
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        rotation: 0,
+                        filter: "blur(0px)",
+                        duration: 2 + (index * 0.2),
+                        ease: "back.out(2)",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 80%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+
+            // Ultra slide animations
+            scrollSlideLeftElements.forEach((element, index) => {
+                gsap.fromTo(element,
+                    {
+                        opacity: 0,
+                        x: -300,
+                        rotationY: -90
+                    },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        rotationY: 0,
+                        duration: 1.8,
+                        ease: "power4.out",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 75%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+
+            scrollSlideRightElements.forEach((element, index) => {
+                gsap.fromTo(element,
+                    {
+                        opacity: 0,
+                        x: 300,
+                        rotationY: 90
+                    },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        rotationY: 0,
+                        duration: 1.8,
+                        ease: "power4.out",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 75%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+
+            // Animated counter for stats
+            animateCounters();
         }
 
-        // Loading Screen
-        window.addEventListener('load', () => {
-            initializePages(); // Initialize pages immediately
-            setTimeout(() => {
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('main-content').style.opacity = '1';
-            }, 3000);
-        });
+        // Animate numerical counters
+        function animateCounters() {
+            const yearsElement = document.getElementById('stat-years');
+            const patientsElement = document.getElementById('stat-patients');
+            
+            if (yearsElement) {
+                gsap.to({ value: 0 }, {
+                    value: 15,
+                    duration: 2,
+                    ease: "power2.out",
+                    onUpdate: function() {
+                        yearsElement.textContent = Math.floor(this.targets()[0].value) + '+';
+                    },
+                    scrollTrigger: {
+                        trigger: yearsElement,
+                        start: "top 80%"
+                    }
+                });
+            }
+
+            if (patientsElement) {
+                gsap.to({ value: 0 }, {
+                    value: 2742,
+                    duration: 2,
+                    ease: "power2.out",
+                    onUpdate: function() {
+                        const value = Math.floor(this.targets()[0].value);
+                        if (value < 1000) {
+                            patientsElement.textContent = value + '+';
+                        } else {
+                            patientsElement.textContent = (value / 1000).toFixed(1) + 'K+';
+                        }
+                    },
+                    scrollTrigger: {
+                        trigger: patientsElement,
+                        start: "top 80%"
+                    }
+                });
+            }
+        }
+
+        // Smooth scrolling navigation
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: {
+                        y: element,
+                        offsetY: 100
+                    },
+                    ease: "power3.inOut"
+                });
+            }
+        }
 
         // Booking Modal
         function openBookingModal() {
-            document.getElementById('booking-modal').classList.add('active');
+            const modal = document.getElementById('booking-modal');
+            modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            
+            gsap.fromTo(modal.firstElementChild, 
+                { opacity: 0, scale: 0.8, y: 50 },
+                { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "power3.out" }
+            );
         }
 
         function closeBookingModal() {
-            document.getElementById('booking-modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
+            const modal = document.getElementById('booking-modal');
+            gsap.to(modal.firstElementChild, {
+                opacity: 0,
+                scale: 0.8,
+                y: 50,
+                duration: 0.3,
+                ease: "power2.in",
+                onComplete: () => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }
+            });
         }
 
         // Form Submission
@@ -1430,12 +1918,18 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
             
-            // Show success message
-            alert('🎉 Appointment request sent successfully!\\n\\nWe\'ll contact you within 1 hour to confirm your appointment.\\n\\nFor immediate emergencies, please call (317) 854-5309.');
-            
-            // Reset form
-            this.reset();
-            closeBookingModal();
+            // Show success message with 3D effects
+            gsap.to(this, {
+                opacity: 0.5,
+                duration: 0.3,
+                onComplete: () => {
+                    alert('🚀 3D Appointment Request Sent Successfully!\\n\\nOur AI has analyzed your request. We\'ll contact you within 1 hour to confirm your revolutionary dental experience.\\n\\nFor immediate emergencies, please call (317) 854-5309.');
+                    
+                    // Reset form and close modal
+                    this.reset();
+                    closeBookingModal();
+                }
+            });
         });
 
         // Utility Functions
@@ -1447,7 +1941,7 @@
             window.location.href = 'tel:+13178545309';
         }
 
-        // Chatbot
+        // Advanced Chatbot with 3D responses
         const chatToggle = document.getElementById('chat-toggle');
         const chatWindow = document.getElementById('chat-window');
         const closeChat = document.getElementById('close-chat');
@@ -1456,45 +1950,79 @@
         const sendMessage = document.getElementById('send-message');
 
         chatToggle.addEventListener('click', () => {
-            chatWindow.classList.toggle('hidden');
+            if (chatWindow.classList.contains('hidden')) {
+                chatWindow.classList.remove('hidden');
+                gsap.fromTo(chatWindow, 
+                    { opacity: 0, scale: 0.8, y: 20 },
+                    { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "power3.out" }
+                );
+            } else {
+                gsap.to(chatWindow, {
+                    opacity: 0,
+                    scale: 0.8,
+                    y: 20,
+                    duration: 0.3,
+                    ease: "power2.in",
+                    onComplete: () => chatWindow.classList.add('hidden')
+                });
+            }
         });
 
         closeChat.addEventListener('click', () => {
-            chatWindow.classList.add('hidden');
+            gsap.to(chatWindow, {
+                opacity: 0,
+                scale: 0.8,
+                y: 20,
+                duration: 0.3,
+                ease: "power2.in",
+                onComplete: () => chatWindow.classList.add('hidden')
+            });
         });
 
         function addMessage(message, isUser = false) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `mb-4 ${isUser ? 'text-right' : ''}`;
+            messageDiv.style.opacity = '0';
             messageDiv.innerHTML = `
-                <div class="${isUser ? 'bg-primary-500 text-white ml-8' : 'bg-white text-gray-800 mr-8'} p-4 rounded-lg shadow-sm">
-                    <p class="text-sm">${message}</p>
+                <div class="${isUser ? 'bg-primary-500 ml-8 neon-glow' : 'glass-neon mr-8'} p-4 rounded-lg">
+                    <p class="text-sm text-white">${message}</p>
                 </div>
             `;
             chatMessages.appendChild(messageDiv);
+            
+            // Animate message appearance
+            gsap.to(messageDiv, {
+                opacity: 1,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+            
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function getBotResponse(userMessage) {
             const responses = {
-                'emergency': 'For dental emergencies, please call us immediately at (317) 854-5309. We\'re available 24/7 for urgent care including severe pain, broken teeth, and trauma.',
-                'appointment': 'You can book an appointment by clicking the "Book Now" button on our website or calling (317) 854-5309. We offer same-day appointments for emergencies.',
-                'hours': 'Our office hours are:\\n• Monday-Friday: 8:00 AM - 8:00 PM\\n• Saturday: 9:00 AM - 6:00 PM\\n• Sunday: 10:00 AM - 4:00 PM\\n• Emergency services available 24/7',
-                'insurance': 'We accept most major insurance plans and offer flexible payment options including CareCredit financing. Call us at (317) 854-5309 to verify your coverage.',
-                'location': 'We\'re located at 7225 US-31, Indianapolis, IN. Convenient location with easy parking and handicap accessibility.',
-                'cost': 'Our pricing starts from $89 for emergency care, $149 for general dentistry, and $299 for cosmetic procedures. Final costs depend on your specific treatment needs.',
-                'services': 'We offer comprehensive dental services including:\\n• Emergency Dental Care\\n• General Dentistry\\n• Cosmetic Dentistry\\n• Restorative Care\\n• Family Dentistry\\n• Oral Surgery'
+                'emergency': 'For dental emergencies, our 3D scanning technology provides instant diagnosis. Call us immediately at (317) 854-5309 for AI-powered triage and immediate 3D treatment planning. Our holographic consultation will show you exactly what we\'ll do before we start.',
+                'appointment': 'You can book a 3D consultation using our advanced booking system or calling (317) 854-5309. Our AI will analyze your needs and match you with the perfect treatment plan using our revolutionary 3D technology.',
+                'hours': 'Our futuristic facility operates:\\n• Monday-Friday: 8:00 AM - 8:00 PM\\n• Saturday: 9:00 AM - 6:00 PM\\n• Sunday: 10:00 AM - 4:00 PM\\n• 3D Emergency services with AI triage available 24/7/365',
+                'insurance': 'We accept most major insurance plans and offer flexible payment options including CareCredit financing. Our 3D treatments are often covered as they represent the most advanced standard of care. Call (317) 854-5309 to verify your coverage.',
+                'location': 'We\'re located at 7225 US-31, Indianapolis, IN. Our facility features holographic consultation rooms, 3D printing labs, and AR visualization centers. Easy parking and complete accessibility.',
+                'cost': 'Our revolutionary pricing: 3D Emergency Care from $89, 3D General Dentistry from $149, AR Cosmetic Design from $299. All treatments include 3D scanning and AI analysis. Final costs depend on your personalized treatment plan.',
+                'services': 'Our futuristic services include:\\n• 3D Emergency Care with AI Triage\\n• 3D General Dentistry with Predictive Analysis\\n• AR Cosmetic Design with Live Preview\\n• Same-Day 3D Printing\\n• Holographic Treatment Planning\\n• AI-Powered Diagnostics',
+                '3d': 'Our 3D technology includes: instant 3D oral scanning, AI-powered analysis in 30 seconds, same-day 3D printing of crowns and bridges, AR visualization of treatment results, and holographic treatment planning. You can see your results before treatment begins!',
+                'ai': 'Our AI system analyzes your 3D scans instantly, predicts potential issues before they become problems, creates personalized treatment plans, and provides 24/7 emergency triage. It\'s like having a dental expert analyzing your case around the clock.',
+                'technology': 'We use cutting-edge technology: 3D intraoral scanners, AI diagnostic software, same-day 3D printing, augmented reality visualization, holographic displays, and IoT monitoring systems. This isn\'t just dentistry - it\'s the future of healthcare.'
             };
 
             const message = userMessage.toLowerCase();
             
             for (const [key, response] of Object.entries(responses)) {
-                if (message.includes(key) || message.includes(key.slice(0, -1))) {
+                if (message.includes(key)) {
                     return response;
                 }
             }
 
-            return 'Thank you for your question! For personalized assistance, please call us at (317) 854-5309 or book an appointment online. Our team is here to help with all your dental needs.';
+            return '🤖 Thank you for your question about our revolutionary dental technology! Our 3D systems and AI diagnostics can provide personalized answers. Call us at (317) 854-5309 for a detailed consultation, or book a 3D appointment online to experience the future of dentistry firsthand.';
         }
 
         function sendChatMessage() {
@@ -1504,10 +2032,25 @@
             addMessage(message, true);
             chatInput.value = '';
 
+            // Add typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'mb-4';
+            typingDiv.innerHTML = `
+                <div class="glass-neon mr-8 p-4 rounded-lg">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+
             setTimeout(() => {
+                chatMessages.removeChild(typingDiv);
                 const response = getBotResponse(message);
                 addMessage(response);
-            }, 1000);
+            }, 1500);
         }
 
         sendMessage.addEventListener('click', sendChatMessage);
@@ -1517,48 +2060,107 @@
             }
         });
 
-        // Smooth scrolling for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Initialize date input with tomorrow's date
+        // Initialize date input
         document.addEventListener('DOMContentLoaded', function() {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             const tomorrowString = tomorrow.toISOString().split('T')[0];
-            document.getElementById('date').setAttribute('min', tomorrowString);
-            document.getElementById('date').value = tomorrowString;
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                dateInput.setAttribute('min', tomorrowString);
+                dateInput.value = tomorrowString;
+            }
         });
 
-        // Add loading progress animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes loadProgress {
-                0% { width: 0%; }
-                20% { width: 25%; }
-                50% { width: 50%; }
-                80% { width: 85%; }
-                100% { width: 100%; }
+        // Ultra-Advanced Particle System
+        function createSpectacularParticles() {
+            const particleBg = document.querySelector('.particle-bg');
+            
+            // Create different types of particles
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                const size = Math.random() * 4 + 1;
+                const hue = Math.random() * 60 + 180; // Blue to cyan range
+                
+                particle.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: radial-gradient(circle, hsla(${hue}, 100%, 70%, 0.8) 0%, transparent 70%);
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation: float3DSpectacular ${8 + Math.random() * 15}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 10}s;
+                    box-shadow: 0 0 ${size * 3}px hsla(${hue}, 100%, 70%, 0.4);
+                    filter: blur(${Math.random() * 2}px);
+                `;
+                particleBg.appendChild(particle);
             }
-        `;
-        document.head.appendChild(style);
 
-        // Mobile menu functionality
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        let mobileMenuOpen = false;
+            // Create larger glowing orbs
+            for (let i = 0; i < 20; i++) {
+                const orb = document.createElement('div');
+                const size = Math.random() * 15 + 10;
+                const hue = Math.random() * 40 + 200; // Blue range
+                
+                orb.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: radial-gradient(circle, 
+                        hsla(${hue}, 80%, 60%, 0.3) 0%, 
+                        hsla(${hue}, 60%, 70%, 0.1) 50%, 
+                        transparent 100%);
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation: float3DSpectacular ${15 + Math.random() * 20}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 15}s;
+                    box-shadow: 
+                        0 0 ${size}px hsla(${hue}, 100%, 70%, 0.3),
+                        inset 0 0 ${size/2}px hsla(${hue}, 100%, 90%, 0.2);
+                    filter: blur(1px);
+                `;
+                particleBg.appendChild(orb);
+            }
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuOpen = !mobileMenuOpen;
-            // Add mobile menu implementation here
+            // Create dental-themed particles
+            const dentalEmojis = ['🦷', '⚕️', '🔬', '💎'];
+            for (let i = 0; i < 15; i++) {
+                const dentalParticle = document.createElement('div');
+                const emoji = dentalEmojis[Math.floor(Math.random() * dentalEmojis.length)];
+                
+                dentalParticle.style.cssText = `
+                    position: absolute;
+                    font-size: ${Math.random() * 20 + 15}px;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    opacity: ${Math.random() * 0.3 + 0.1};
+                    animation: float3DSpectacular ${20 + Math.random() * 30}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 20}s;
+                    filter: 
+                        drop-shadow(0 0 10px rgba(0, 204, 255, 0.5))
+                        hue-rotate(${Math.random() * 360}deg);
+                    transform-style: preserve-3d;
+                `;
+                dentalParticle.textContent = emoji;
+                particleBg.appendChild(dentalParticle);
+            }
+        }
+
+        // Initialize spectacular particle system
+        setTimeout(createSpectacularParticles, 2000);
+        
+        // Add dynamic background effects that respond to scrolling
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            const particleBg = document.querySelector('.particle-bg');
+            
+            if (particleBg) {
+                const hueShift = scrollPercent * 180;
+                particleBg.style.filter = `hue-rotate(${hueShift}deg) brightness(${1 + scrollPercent * 0.2})`;
+            }
         });
     </script>
 </body>
