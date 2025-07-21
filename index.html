@@ -28,14 +28,15 @@
         body {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%);
+            background: linear-gradient(135deg, #fafbff 0%, #f0f4f8 100%);
             color: #2d3748;
-            line-height: 1.6;
-            /* Performance optimizations */
+            line-height: 1.7;
+            /* Ultra-smooth optimizations */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transform: translateZ(0);
             backface-visibility: hidden;
+            scroll-behavior: smooth;
         }
 
         .elegant-font {
@@ -60,33 +61,33 @@
             transform: rotateX(0deg) rotateY(0deg) scale(1.05);
         }
 
-        /* Ultra-Natural Card Effects */
+        /* Ultra-Soft Natural Cards */
         .glass-ultra {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
         
         .glass-ultra:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
 
         .glass-neon {
-            background: linear-gradient(135deg, rgba(139, 186, 221, 0.12), rgba(99, 207, 142, 0.08));
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(139, 186, 221, 0.15);
-            box-shadow: 0 4px 15px rgba(139, 186, 221, 0.1);
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: linear-gradient(135deg, rgba(147, 197, 253, 0.08), rgba(134, 239, 172, 0.06));
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(147, 197, 253, 0.1);
+            box-shadow: 0 2px 12px rgba(147, 197, 253, 0.08);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
         
         .glass-neon:hover {
-            background: linear-gradient(135deg, rgba(139, 186, 221, 0.18), rgba(99, 207, 142, 0.12));
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(139, 186, 221, 0.15);
+            background: linear-gradient(135deg, rgba(147, 197, 253, 0.12), rgba(134, 239, 172, 0.08));
+            transform: translateY(-0.5px);
+            box-shadow: 0 4px 18px rgba(147, 197, 253, 0.12);
         }
 
         /* Natural Text Effects */
@@ -109,12 +110,12 @@
                 transform: translateY(0px); 
             }
             50% { 
-                transform: translateY(-8px); 
+                transform: translateY(-4px); 
             }
         }
 
         .float-3d {
-            animation: float3D 8s ease-in-out infinite;
+            animation: float3D 12s ease-in-out infinite;
         }
 
         /* Holographic Effects */
@@ -171,11 +172,11 @@
             }
         }
 
-        /* Ultra-Smooth Scroll Animations */
+        /* Butter-Smooth Scroll Animations */
         .scroll-reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .scroll-reveal.revealed {
@@ -197,8 +198,8 @@
 
         .scroll-slide-left {
             opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(-20px);
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .scroll-slide-left.revealed {
@@ -208,8 +209,8 @@
 
         .scroll-slide-right {
             opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(20px);
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .scroll-slide-right.revealed {
@@ -945,6 +946,78 @@
                             <i class="fas fa-atom text-green-400 text-2xl"></i>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- BEAUTIFUL GALLERY SECTION -->
+    <section id="gallery" class="py-16 relative bg-gradient-to-b from-white to-slate-50">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-12 scroll-reveal">
+                <h2 class="text-4xl lg:text-5xl font-bold elegant-font text-gray-800 mb-4">
+                    Before & After Transformations
+                </h2>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    Real results from our gentle, professional dental care
+                </p>
+            </div>
+
+            <!-- Working Photo Gallery -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Before Photo -->
+                <div class="scroll-slide-left glass-ultra rounded-lg overflow-hidden">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&h=400&fit=crop&q=80" 
+                             alt="Before dental treatment" 
+                             class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-orange-500/90 backdrop-blur-sm text-white px-4 py-2 rounded-full font-medium">
+                            Before Treatment
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-gray-800 mb-2">Stained & Damaged</h3>
+                        <p class="text-gray-600 text-sm">Years of wear and discoloration</p>
+                    </div>
+                </div>
+
+                <!-- After Photo -->
+                <div class="scroll-slide-right glass-ultra rounded-lg overflow-hidden">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&h=400&fit=crop&q=80" 
+                             alt="After dental treatment" 
+                             class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-green-500/90 backdrop-blur-sm text-white px-4 py-2 rounded-full font-medium">
+                            After Treatment
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-gray-800 mb-2">Beautiful & Healthy</h3>
+                        <p class="text-gray-600 text-sm">Radiant, confident smile achieved</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Quote -->
+            <div class="mt-12 scroll-reveal">
+                <div class="glass-ultra rounded-xl p-8 text-center max-w-2xl mx-auto">
+                    <div class="flex justify-center mb-4">
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <blockquote class="text-lg text-gray-700 italic mb-4">
+                        "Amazing transformation! The team was so gentle and professional. I love my new smile!"
+                    </blockquote>
+                    <p class="text-blue-600 font-semibold">- Jennifer M.</p>
                 </div>
             </div>
         </div>
