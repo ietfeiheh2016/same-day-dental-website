@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0066cc" />
+    <meta name="description" content="Same Day Dental - Emergency Dental Care, General Dentistry, Cosmetic Procedures" />
+    <title>Same Day Dental - Emergency & General Dentistry</title>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-0Jyl1r9q8lzkEBVW-sR5dAD6VCDdAoY&libraries=places"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #0066cc, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 102, 204, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 102, 204, 0.6); }
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#0066cc',
+                            600: '#004499',
+                            700: '#003366',
+                        },
+                        secondary: {
+                            50: '#f0f9ff',
+                            500: '#00ccff',
+                            600: '#0099cc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="root">
+        <!-- Loading Screen -->
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
+            <div class="text-center">
+                <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <h2 class="text-2xl font-bold gradient-text">Same Day Dental</h2>
+                <p class="text-gray-600 mt-2">Loading your perfect smile...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Simple Hero Component
+        function Hero() {
+            return (
+                <section className="min-h-screen bg-gradient-to-br from-blue-500 to-cyan-500 text-white relative overflow-hidden">
+                    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                    <div className="relative z-10 min-h-screen flex items-center">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                                <div className="text-white">
+                                    <div className="inline-flex items-center bg-white bg-opacity-20 backdrop-blur-md rounded-full px-4 py-2 mb-6">
+                                        <div className="flex items-center space-x-1">
+                                            <span className="text-yellow-400 text-sm">★★★★☆</span>
+                                        </div>
+                                        <span className="ml-2 text-sm font-medium">4.1 Rating • 2,742 Reviews</span>
+                                    </div>
+                                    
+                                    <h1 className="text-5xl lg:text-7xl font-bold mb-4 leading-tight">
+                                        Same Day Emergency Dental Care
+                                    </h1>
+                                    
+                                    <h2 className="text-xl lg:text-2xl mb-6 text-white text-opacity-90 font-medium">
+                                        No Appointment Needed - Walk-ins Welcome
+                                    </h2>
+                                    
+                                    <p className="text-lg mb-8 text-white text-opacity-80 max-w-lg leading-relaxed">
+                                        Get immediate relief from dental pain with our emergency services. Open 7 days a week for your urgent dental needs.
+                                    </p>
+                                    
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <button className="bg-white text-gray-800 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2">
+                                            <span>Get Emergency Care</span>
+                                            <span className="text-xl">→</span>
+                                        </button>
+                                        
+                                        <a href="tel:+13178545309" className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-gray-800 transition-all duration-200 flex items-center justify-center space-x-2">
+                                            <span>📞</span>
+                                            <span>Call Now</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div className="mt-12 grid grid-cols-2 gap-6">
+                                        <div className="flex items-center space-x-3">
+                                            <span className="text-2xl">🚨</span>
+                                            <span className="font-medium">24/7 Emergency</span>
+                                        </div>
+                                        <div className="flex items-center space-x-3">
+                                            <span className="text-2xl">⚡</span>
+                                            <span className="font-medium">Same Day Service</span>
+                                        </div>
+                                        <div className="flex items-center space-x-3">
+                                            <span className="text-2xl">💎</span>
+                                            <span className="font-medium">Modern Equipment</span>
+                                        </div>
+                                        <div className="flex items-center space-x-3">
+                                            <span className="text-2xl">❤️</span>
+                                            <span className="font-medium">Gentle Care</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="relative">
+                                    <div className="relative bg-white bg-opacity-20 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
+                                        <div className="aspect-square bg-white bg-opacity-30 rounded-2xl flex items-center justify-center">
+                                            <span className="text-8xl">🦷</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Services Component
+        function Services() {
+            const services = [
+                {
+                    icon: "🚨",
+                    title: "Emergency Dental Care",
+                    description: "Immediate relief for dental emergencies. No appointment needed - walk-ins welcome 24/7.",
+                    price: "From $89",
+                    popular: true
+                },
+                {
+                    icon: "🦷", 
+                    title: "General Dentistry",
+                    description: "Comprehensive oral health care including cleanings, fillings, and routine checkups.",
+                    price: "From $149"
+                },
+                {
+                    icon: "✨",
+                    title: "Cosmetic Dentistry", 
+                    description: "Transform your smile with our advanced cosmetic procedures and whitening treatments.",
+                    price: "From $299"
+                }
+            ];
+
+            return (
+                <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl lg:text-5xl font-bold gradient-text mb-4">
+                                Our Dental Services
+                            </h2>
+                            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                Comprehensive dental care with same-day appointments available.
+                            </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {services.map((service, index) => (
+                                <div key={index} className="relative group">
+                                    {service.popular && (
+                                        <div className="absolute -top-3 -right-3 z-10">
+                                            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                                                🔥 MOST POPULAR
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    <div className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden h-full">
+                                        <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-6 text-white relative overflow-hidden">
+                                            <div className="relative z-10">
+                                                <div className="text-4xl mb-3">{service.icon}</div>
+                                                <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+                                                <div className="text-2xl font-bold">{service.price}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="p-6">
+                                            <p className="text-gray-600 mb-6 leading-relaxed">
+                                                {service.description}
+                                            </p>
+                                            <button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200">
+                                                Book Appointment
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Contact Component
+        function Contact() {
+            return (
+                <section className="py-20 bg-gray-900 text-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl lg:text-5xl font-bold gradient-text mb-4">
+                                Contact Same Day Dental
+                            </h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                            <div className="space-y-6">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xl">📍</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">Address</h3>
+                                        <p className="text-gray-300">
+                                            7225 US-31<br />
+                                            Indianapolis, IN
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xl">📞</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">Phone</h3>
+                                        <a href="tel:+13178545309" className="text-blue-400 hover:text-blue-300">
+                                            (317) 854-5309
+                                        </a>
+                                        <p className="text-sm text-gray-400">Available 24/7 for emergencies</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xl">⭐</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">Patient Reviews</h3>
+                                        <div className="flex items-center space-x-2">
+                                            <span className="text-2xl font-bold text-yellow-600">4.1</span>
+                                            <span className="text-yellow-400">★★★★☆</span>
+                                        </div>
+                                        <p className="text-gray-400 text-sm">2,742 Google Reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl p-8">
+                                <h3 className="text-2xl font-bold mb-6">Ready to Schedule?</h3>
+                                <div className="space-y-4">
+                                    <a href="tel:+13178545309" className="block w-full bg-white text-blue-600 py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all duration-200 text-center">
+                                        📞 Call (317) 854-5309
+                                    </a>
+                                    <button className="w-full border-2 border-white text-white py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-200">
+                                        📅 Book Online
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                    setLoading(false);
+                }, 2000);
+
+                return () => clearTimeout(timer);
+            }, []);
+
+            if (loading) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                            <h2 className="text-2xl font-bold gradient-text">Same Day Dental</h2>
+                            <p className="text-gray-600 mt-2">Loading your perfect smile...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div>
+                    <Hero />
+                    <Services />
+                    <Contact />
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
